@@ -5,14 +5,14 @@ export default function Home() {
     <>
       <Head title="Homepage" />
       <div className="container">
-        <h1>Bienvenue sur Hypertube</h1>
-        <p>Votre application de streaming basée sur BitTorrent</p>
+        <h1>Welcome to Hypertube</h1>
+        <p>Your BitTorrent-based streaming application</p>
         <div className="auth-links">
           <Link href="/login" className="btn btn-primary">
-            Se connecter
+            Log in
           </Link>
           <Link href="/register" className="btn btn-secondary">
-            S'inscrire
+            Sign up
           </Link>
         </div>
       </div>

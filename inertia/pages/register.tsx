@@ -1,23 +1,12 @@
 import { useState, ChangeEvent, FormEvent } from 'react'
-import { Link, router } from '@inertiajs/react'
+import { Link, Head, router, usePage } from '@inertiajs/react'
 
-interface RegisterProps {
-  errors: {
-    username?: string
-    email?: string
-    firstname?: string
-    lastname?: string
-    password?: string
-  }
-  csrfToken: string
-}
-
-export default function Register({ errors, csrfToken }: RegisterProps) {
+export default function Register() {
+  const [errors, setErrors] = useState<{ [key: string]: string[] }>({})
+  const { csrf_token } = usePage<{ csrf_token: string }>().props
   const [values, setValues] = useState({
-    username: '',
+    name: '',
     email: '',
-    firstname: '',
-    lastname: '',
     password: '',
     password_confirmation: '',
   })
@@ -34,28 +23,31 @@ export default function Register({ errors, csrfToken }: RegisterProps) {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    router.post('/register', values)
+    const { password_confirmation, ...preload } = values
+
+    if (password_confirmation !== values.password) {
+      setErrors({ password: ["Password doesn't match"] })
+      return
+    }
+    router.post('/auth/register', {
+      _csrf: csrf_token,
+      ...preload,
+    })
   }
 
   return (
     <>
+      <Head title="Register" />
       <div className="register-container">
-        <h1>S'inscrire</h1>
+        <h1>Sign Up</h1>
 
         <form onSubmit={handleSubmit}>
-          <input type="hidden" name="_csrf" value={csrfToken} />
-
+          {Object.keys(errors).map((key) =>
+            errors[key].map((error, index) => <p key={`${key}-${index}`}>{error}</p>)
+          )}
           <div className="form-group">
-            <label htmlFor="username">Nom d'utilisateur</label>
-            <input
-              id="username"
-              name="username"
-              type="text"
-              value={values.username}
-              onChange={handleChange}
-              className={errors.username ? 'is-invalid' : ''}
-            />
-            {errors.username && <div className="invalid-feedback">{errors.username}</div>}
+            <label htmlFor="name">Name</label>
+            <input id="name" name="name" type="text" value={values.name} onChange={handleChange} />
           </div>
 
           <div className="form-group">
@@ -66,52 +58,22 @@ export default function Register({ errors, csrfToken }: RegisterProps) {
               type="email"
               value={values.email}
               onChange={handleChange}
-              className={errors.email ? 'is-invalid' : ''}
             />
-            {errors.email && <div className="invalid-feedback">{errors.email}</div>}
           </div>
 
           <div className="form-group">
-            <label htmlFor="firstname">Prénom</label>
-            <input
-              id="firstname"
-              name="firstname"
-              type="text"
-              value={values.firstname}
-              onChange={handleChange}
-              className={errors.firstname ? 'is-invalid' : ''}
-            />
-            {errors.firstname && <div className="invalid-feedback">{errors.firstname}</div>}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="lastname">Nom</label>
-            <input
-              id="lastname"
-              name="lastname"
-              type="text"
-              value={values.lastname}
-              onChange={handleChange}
-              className={errors.lastname ? 'is-invalid' : ''}
-            />
-            {errors.lastname && <div className="invalid-feedback">{errors.lastname}</div>}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Mot de passe</label>
+            <label htmlFor="password">Password</label>
             <input
               id="password"
               name="password"
               type="password"
               value={values.password}
               onChange={handleChange}
-              className={errors.password ? 'is-invalid' : ''}
             />
-            {errors.password && <div className="invalid-feedback">{errors.password}</div>}
           </div>
 
           <div className="form-group">
-            <label htmlFor="password_confirmation">Confirmer le mot de passe</label>
+            <label htmlFor="password_confirmation">Confirm Password</label>
             <input
               id="password_confirmation"
               name="password_confirmation"
@@ -123,12 +85,12 @@ export default function Register({ errors, csrfToken }: RegisterProps) {
 
           <div className="form-buttons">
             <button type="submit" className="btn btn-primary">
-              S'inscrire
+              Sign Up
             </button>
           </div>
 
           <div className="form-links">
-            <Link href="/login">Déjà un compte? Se connecter</Link>
+            <Link href="/login">Already have an account? Log in</Link>
           </div>
         </form>
       </div>
