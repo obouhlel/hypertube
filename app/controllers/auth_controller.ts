@@ -3,24 +3,30 @@ import User from '#models/user'
 import { registerValidator, loginValidator } from '#validators/auth'
 
 export default class AuthController {
-  async login({ request, response }: HttpContext) {
+  async login({ request, session, inertia }: HttpContext) {
     const { email, password } = await request.validateUsing(loginValidator)
 
     const user = await User.verifyCredentials(email, password)
     const token = await User.accessTokens.create(user)
 
-    return response.ok({
-      token: token,
-      ...user.serialize(),
+    // Stocker le token dans la session
+    session.put('token', token)
+
+    // Rediriger vers la page home avec Inertia
+    return inertia.render('home', {
+      user: user.serialize(),
     })
   }
 
-  async register({ request, response }: HttpContext) {
+  async register({ request, inertia }: HttpContext) {
     const payload = await request.validateUsing(registerValidator)
 
-    const user = await User.create(payload)
+    await User.create(payload)
 
-    return response.created(user)
+    // Rediriger vers la page login avec Inertia
+    return inertia.render('login', {
+      message: 'Account created successfully. Please log in.',
+    })
   }
 
   async logout({ auth, response }: HttpContext) {
