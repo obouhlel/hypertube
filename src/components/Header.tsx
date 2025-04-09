@@ -40,7 +40,7 @@ export function Header() {
       }`}
     >
       <div className="mx-3">
-        <h1 className="text-2xl font-bold">Template</h1>
+        <h1 className="text-2xl font-bold">Hypertube</h1>
       </div>
       <div className="flex items-center space-x-4 relative">
         {/* Palette */}
