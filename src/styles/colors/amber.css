@@ -1,0 +1,33 @@
+.bg-amber-50 {
+  @apply bg-amber-50;
+}
+.bg-amber-100 {
+  @apply bg-amber-100;
+}
+.bg-amber-200 {
+  @apply bg-amber-200;
+}
+.bg-amber-300 {
+  @apply bg-amber-300;
+}
+.bg-amber-400 {
+  @apply bg-amber-400;
+}
+.bg-amber-500 {
+  @apply bg-amber-500;
+}
+.bg-amber-600 {
+  @apply bg-amber-600;
+}
+.bg-amber-700 {
+  @apply bg-amber-700;
+}
+.bg-amber-800 {
+  @apply bg-amber-800;
+}
+.bg-amber-900 {
+  @apply bg-amber-900;
+}
+.bg-amber-950 {
+  @apply bg-amber-950;
+}

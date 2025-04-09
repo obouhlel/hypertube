@@ -1,0 +1,33 @@
+.bg-red-50 {
+  @apply bg-red-50;
+}
+.bg-red-100 {
+  @apply bg-red-100;
+}
+.bg-red-200 {
+  @apply bg-red-200;
+}
+.bg-red-300 {
+  @apply bg-red-300;
+}
+.bg-red-400 {
+  @apply bg-red-400;
+}
+.bg-red-500 {
+  @apply bg-red-500;
+}
+.bg-red-600 {
+  @apply bg-red-600;
+}
+.bg-red-700 {
+  @apply bg-red-700;
+}
+.bg-red-800 {
+  @apply bg-red-800;
+}
+.bg-red-900 {
+  @apply bg-red-900;
+}
+.bg-red-950 {
+  @apply bg-red-950;
+}

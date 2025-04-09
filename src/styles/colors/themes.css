@@ -1,0 +1,99 @@
+/* Définition des thèmes de couleur en mode clair */
+html.light.theme-red {
+  @apply bg-red-50;
+}
+html.light.theme-orange {
+  @apply bg-orange-50;
+}
+html.light.theme-amber {
+  @apply bg-amber-50;
+}
+html.light.theme-yellow {
+  @apply bg-yellow-50;
+}
+html.light.theme-lime {
+  @apply bg-lime-50;
+}
+html.light.theme-green {
+  @apply bg-green-50;
+}
+html.light.theme-emerald {
+  @apply bg-emerald-50;
+}
+html.light.theme-teal {
+  @apply bg-teal-50;
+}
+html.light.theme-sky {
+  @apply bg-sky-50;
+}
+html.light.theme-blue {
+  @apply bg-blue-50;
+}
+html.light.theme-indigo {
+  @apply bg-indigo-50;
+}
+html.light.theme-violet {
+  @apply bg-violet-50;
+}
+html.light.theme-purple {
+  @apply bg-purple-50;
+}
+html.light.theme-fuchsia {
+  @apply bg-fuchsia-50;
+}
+html.light.theme-pink {
+  @apply bg-pink-50;
+}
+html.light.theme-rose {
+  @apply bg-rose-50;
+}
+
+/* Définition des thèmes de couleur en mode sombre */
+html.dark.theme-red {
+  @apply bg-red-950;
+}
+html.dark.theme-orange {
+  @apply bg-orange-950;
+}
+html.dark.theme-amber {
+  @apply bg-amber-950;
+}
+html.dark.theme-yellow {
+  @apply bg-yellow-950;
+}
+html.dark.theme-lime {
+  @apply bg-lime-950;
+}
+html.dark.theme-green {
+  @apply bg-green-950;
+}
+html.dark.theme-emerald {
+  @apply bg-emerald-950;
+}
+html.dark.theme-teal {
+  @apply bg-teal-950;
+}
+html.dark.theme-sky {
+  @apply bg-sky-950;
+}
+html.dark.theme-blue {
+  @apply bg-blue-950;
+}
+html.dark.theme-indigo {
+  @apply bg-indigo-950;
+}
+html.dark.theme-violet {
+  @apply bg-violet-950;
+}
+html.dark.theme-purple {
+  @apply bg-purple-950;
+}
+html.dark.theme-fuchsia {
+  @apply bg-fuchsia-950;
+}
+html.dark.theme-pink {
+  @apply bg-pink-950;
+}
+html.dark.theme-rose {
+  @apply bg-rose-950;
+}
