@@ -2,7 +2,6 @@ import { useState, ChangeEvent, FormEvent } from 'react'
 import { Link, Head, router, usePage } from '@inertiajs/react'
 
 export default function Register() {
-  const [errors, setErrors] = useState<{ [key: string]: string[] }>({})
   const { csrf_token } = usePage<{ csrf_token: string }>().props
   const [values, setValues] = useState({
     name: '',
@@ -25,8 +24,7 @@ export default function Register() {
     e.preventDefault()
     const { password_confirmation, ...preload } = values
 
-    if (password_confirmation !== values.password) {
-      setErrors({ password: ["Password doesn't match"] })
+    if (values.password_confirmation !== values.password) {
       return
     }
     router.post('/auth/register', {
@@ -42,9 +40,6 @@ export default function Register() {
         <h1>Sign Up</h1>
 
         <form onSubmit={handleSubmit}>
-          {Object.keys(errors).map((key) =>
-            errors[key].map((error, index) => <p key={`${key}-${index}`}>{error}</p>)
-          )}
           <div className="form-group">
             <label htmlFor="name">Name</label>
             <input id="name" name="name" type="text" value={values.name} onChange={handleChange} />

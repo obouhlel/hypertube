@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Head, Link, router, usePage } from '@inertiajs/react'
 
 export default function Login() {
-  const [errors, setErrors] = useState<{ [key: string]: string[] }>({})
   const { csrf_token } = usePage<{ csrf_token: string }>().props
   const [values, setValues] = useState({
     email: '',
@@ -22,14 +21,10 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    try {
-      router.post('/auth/login', {
-        _csrf: csrf_token,
-        ...values,
-      })
-    } catch (serverErrors) {
-      setErrors(serverErrors)
-    }
+    router.post('/auth/login', {
+      _csrf: csrf_token,
+      ...values,
+    })
   }
 
   return (
@@ -39,12 +34,6 @@ export default function Login() {
         <h1>Login</h1>
 
         <form onSubmit={handleSubmit}>
-          <div aria-live="polite">
-            {Object.entries(errors).map(([field, messages]) =>
-              messages.map((message, idx) => <p key={`${field}-${idx}`}>{message}</p>)
-            )}
-          </div>
-
           <div>
             <label htmlFor="email">Email</label>
             <input
