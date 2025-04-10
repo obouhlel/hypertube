@@ -1,7 +1,5 @@
 @import 'tailwindcss';
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 @theme {
   --spacing: 3px;
 }
@@ -11,11 +9,7 @@ body {
   padding: 0;
   margin: 0;
   min-height: calc(100vh - 60px);
-  color-scheme: dark;
   color: white;
   background-color: var(--color-sky-950);
-}
-
-body {
   font-family: Arial, Helvetica, sans-serif;
 }
