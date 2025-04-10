@@ -1,14 +1,19 @@
 import { useState, ChangeEvent, FormEvent } from 'react'
 import { Link, Head, router, usePage } from '@inertiajs/react'
+import Layout from '~/layouts/Layout'
 
 export default function Register() {
   const { csrf_token } = usePage<{ csrf_token: string }>().props
   const [values, setValues] = useState({
-    name: '',
+    username: '',
+    first_name: '',
+    last_name: '',
     email: '',
     password: '',
     password_confirmation: '',
   })
+  const [errors, setErrors] = useState<string[]>([])
+  const [popupVisible, setPopupVisible] = useState(false)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const key = e.target.name
@@ -25,8 +30,11 @@ export default function Register() {
     const { password_confirmation, ...preload } = values
 
     if (values.password_confirmation !== values.password) {
+      setErrors(['Passwords do not match'])
+      setPopupVisible(true) // Show popup
       return
     }
+
     router.post(
       '/auth/register',
       {
@@ -34,68 +42,154 @@ export default function Register() {
         ...preload,
       },
       {
-        onSuccess: () => console.log('Register success'),
-        onError: (errors) => console.log(errors),
+        onSuccess: () => {
+          console.log('Register success')
+          setErrors([])
+          setPopupVisible(false)
+        },
+        onError: (errors) => {
+          console.log(errors)
+          setErrors(Object.values(errors))
+          setPopupVisible(true)
+        },
       }
     )
   }
 
   return (
-    <>
+    <Layout>
       <Head title="Register" />
-      <div className="register-container">
-        <h1>Sign Up</h1>
+      <div className="flex items-center justify-center">
+        <div className="bg-gray-100 p-8 rounded shadow-md w-full max-w-md md:max-w-lg">
+          <h1 className="text-2xl font-bold text-gray-800 mb-6">Sign Up</h1>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="name">Name</label>
-            <input id="name" name="name" type="text" value={values.name} onChange={handleChange} />
-          </div>
+          {popupVisible && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-96 md:w-[500px]">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-4">Error</h2>
+                <ul className="text-xl text-gray-600 space-y-2">
+                  {errors.map((error, index) => (
+                    <li key={index} className="flex items-center">
+                      <span className="text-red-500 font-bold mr-2">•</span>
+                      {error}
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={() => setPopupVisible(false)}
+                  className="mt-6 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
 
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value={values.email}
-              onChange={handleChange}
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="first_name" className="block text-gray-800 font-medium mb-1">
+                First Name
+              </label>
+              <input
+                id="first_name"
+                name="first_name"
+                type="text"
+                value={values.first_name}
+                onChange={handleChange}
+                className="w-full border border-blue-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={values.password}
-              onChange={handleChange}
-            />
-          </div>
+            <div>
+              <label htmlFor="last_name" className="block text-gray-800 font-medium mb-1">
+                Last Name
+              </label>
+              <input
+                id="last_name"
+                name="last_name"
+                type="text"
+                value={values.last_name}
+                onChange={handleChange}
+                className="w-full border border-blue-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="password_confirmation">Confirm Password</label>
-            <input
-              id="password_confirmation"
-              name="password_confirmation"
-              type="password"
-              value={values.password_confirmation}
-              onChange={handleChange}
-            />
-          </div>
+            <div>
+              <label htmlFor="username" className="block text-gray-800 font-medium mb-1">
+                Username
+              </label>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                value={values.username}
+                onChange={handleChange}
+                className="w-full border border-blue-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-          <div className="form-buttons">
-            <button type="submit" className="btn btn-primary">
-              Sign Up
-            </button>
-          </div>
+            <div>
+              <label htmlFor="email" className="block text-gray-800 font-medium mb-1">
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value={values.email}
+                onChange={handleChange}
+                className="w-full border border-blue-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-          <div className="form-links">
-            <Link href="/auth/login">Already have an account? Log in</Link>
-          </div>
-        </form>
+            <div>
+              <label htmlFor="password" className="block text-gray-800 font-medium mb-1">
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                value={values.password}
+                onChange={handleChange}
+                className="w-full border border-blue-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="password_confirmation"
+                className="block text-gray-800 font-medium mb-1"
+              >
+                Confirm Password
+              </label>
+              <input
+                id="password_confirmation"
+                name="password_confirmation"
+                type="password"
+                value={values.password_confirmation}
+                onChange={handleChange}
+                className="w-full border border-blue-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+              >
+                Sign Up
+              </button>
+            </div>
+
+            <div className="text-center">
+              <Link href="/auth/login" className="text-blue-500 hover:underline">
+                Already have an account? Log in
+              </Link>
+            </div>
+          </form>
+        </div>
       </div>
-    </>
+    </Layout>
   )
 }

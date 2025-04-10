@@ -1,51 +1,31 @@
-import { Head, usePage, router, Link } from '@inertiajs/react'
+import { Head, usePage } from '@inertiajs/react'
 import { PageProps as InertiaPageProps } from '@inertiajs/core'
+import Layout from '~/layouts/Layout'
 
 interface User {
   id: number
-  name: string
+  username: string
+  firstName: string
+  lastName: string
   email: string
-  token: string
 }
 
 interface PageProps extends InertiaPageProps {
-  csrf_token: string
-  isAuthenticate: boolean
   user?: User
 }
 
 export default function Home() {
-  const { csrf_token, user } = usePage<PageProps>().props
-
-  const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-
-    router.post(
-      '/auth/logout',
-      {
-        _csrf: csrf_token,
-      },
-      {
-        onSuccess: () => console.log('Logout success'),
-      }
-    )
-  }
+  const { user } = usePage<PageProps>().props
 
   return (
-    <>
+    <Layout>
       <Head title="Homepage" />
-      <div className="container">
-        <h1>Welcome {user ? user.name : 'Guest'}</h1>
-        <p>Your BitTorrent-based streaming application</p>
-        {user ? (
-          <button onClick={handleLogout}>Logout</button>
-        ) : (
-          <>
-            <Link href="/auth/login">Login</Link>
-            <Link href="/auth/register">Register</Link>
-          </>
-        )}
+      <div>
+        <h1 className="text-center text-6xl font-bold mb-5">
+          Welcome {user ? `${user.firstName} ${user.lastName}` : 'to Hypertube'}
+        </h1>
+        <p className="text-center text-3xl">Your BitTorrent-based streaming application</p>
       </div>
-    </>
+    </Layout>
   )
 }

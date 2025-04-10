@@ -8,8 +8,9 @@ export default class LoginController {
   }
 
   async store({ request, response, auth }: HttpContext) {
-    const { email, password } = await request.validateUsing(loginValidator)
-    const user = await User.verifyCredentials(email, password)
+    const { username, password } = await request.validateUsing(loginValidator)
+    const userTmp = await User.query().where('username', username).firstOrFail()
+    const user = await User.verifyCredentials(userTmp.email, password)
     await auth.use('web').login(user)
     return response.redirect('/')
   }
