@@ -15,13 +15,25 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare id: number
 
   @column()
-  declare name: string | null
+  declare username: string
+
+  @column()
+  declare first_name: string
+
+  @column()
+  declare last_name: string
 
   @column()
   declare email: string
 
   @column({ serializeAs: null })
   declare password: string
+
+  @column()
+  declare avatar_url: string
+
+  @column()
+  declare language: string
 
   static rememberMeTokens = DbRememberMeTokensProvider.forModel(User)
 

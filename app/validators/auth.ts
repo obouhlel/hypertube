@@ -9,7 +9,16 @@ export const loginValidator = vine.compile(
 
 export const registerValidator = vine.compile(
   vine.object({
-    name: vine.string().minLength(3).maxLength(64),
+    username: vine
+      .string()
+      .minLength(3)
+      .maxLength(64)
+      .unique(async (query, field) => {
+        const user = await query.from('users').where('username', field).first()
+        return !user
+      }),
+    last_name: vine.string().minLength(3),
+    first_name: vine.string().minLength(3),
     email: vine
       .string()
       .email()
