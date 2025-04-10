@@ -9,7 +9,7 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <>
       <Header />
-      <main className="mt-[60px] min-h-[calc(100vh-100px)] w-screen flex justify-center items-center">
+      <main className="mt-[48px] min-h-[calc(100vh-80px)] w-screen flex justify-center items-center">
         {children}
       </main>
       <Footer />

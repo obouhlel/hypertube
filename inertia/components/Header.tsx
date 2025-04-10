@@ -38,7 +38,7 @@ export function Header() {
       <div className="flex gap-x-2 items-center h-full">
         <Link
           href="/"
-          className="h-full px-2 border-x font-bold flex items-center bg-sky-800 text-white hover:bg-sky-700 active:bg-sky-700"
+          className="h-full text-2xl px-2 border-x font-bold flex items-center bg-sky-800 text-white hover:bg-sky-700 active:bg-sky-700"
         >
           Home
         </Link>
@@ -48,7 +48,7 @@ export function Header() {
           {user ? (
             <button
               onClick={handleLogout}
-              className="h-full px-2 border-x font-bold flex items-center bg-sky-800 text-white hover:bg-sky-700 active:bg-sky-700"
+              className="h-full text-2xl px-2 border-x font-bold flex items-center bg-sky-800 text-white hover:bg-sky-700 active:bg-sky-700"
             >
               Logout
             </button>
@@ -56,13 +56,13 @@ export function Header() {
             <>
               <Link
                 href="/auth/login"
-                className="h-full px-2 border-x font-bold flex items-center bg-sky-800 text-white hover:bg-sky-700 active:bg-sky-700"
+                className="h-full text-2xl px-2 border-x font-bold flex items-center bg-sky-800 text-white hover:bg-sky-700 active:bg-sky-700"
               >
                 Login
               </Link>
               <Link
                 href="/auth/register"
-                className="h-full px-2 border-x font-bold flex items-center bg-sky-800 text-white hover:bg-sky-700 active:bg-sky-700"
+                className="h-full text-2xl px-2 border-x font-bold flex items-center bg-sky-800 text-white hover:bg-sky-700 active:bg-sky-700"
               >
                 Sign up
               </Link>
