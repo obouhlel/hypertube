@@ -34,7 +34,7 @@ export default function Register() {
         ...preload,
       },
       {
-        onSuccess: () => router.visit('/login'),
+        onSuccess: () => console.log('Register success'),
         onError: (errors) => console.log(errors),
       }
     )
@@ -92,7 +92,7 @@ export default function Register() {
           </div>
 
           <div className="form-links">
-            <Link href="/login">Already have an account? Log in</Link>
+            <Link href="/auth/login">Already have an account? Log in</Link>
           </div>
         </form>
       </div>

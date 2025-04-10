@@ -7,25 +7,34 @@
 |
 */
 
+import type { HttpContext } from '@adonisjs/core/http'
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
-router.on('/').renderInertia('home')
-
 router
-  .group(() => {
-    router.on('/login').renderInertia('login')
-    router.on('/register').renderInertia('register')
+  .get('/', async (ctx: HttpContext) => {
+    return ctx.inertia.render('home')
   })
-  .use(middleware.guest())
+  .use(middleware.silentAuth())
+  .as('home')
 
-const AuthController = () => import('#controllers/auth_controller')
+const LoginController = () => import('#controllers/login_controller')
+const RegisterController = () => import('#controllers/register_controller')
+const LogoutController = () => import('#controllers/logout_controller')
 router
   .group(() => {
-    router.post('register', [AuthController, 'register'])
-    router.post('login', [AuthController, 'login'])
-    router.post('logout', [AuthController, 'logout']).use(middleware.auth())
+    router.get('/login', [LoginController, 'show']).as('login.show').use(middleware.guest())
+    router.post('/login', [LoginController, 'store']).as('login.store').use(middleware.guest())
+
+    router
+      .get('/register', [RegisterController, 'show'])
+      .as('register.show')
+      .use(middleware.guest())
+    router
+      .post('/register', [RegisterController, 'store'])
+      .as('register.store')
+      .use(middleware.guest())
+
+    router.post('/logout', [LogoutController, 'store']).as('logout.store').use(middleware.auth())
   })
   .prefix('auth')
-
-router.group(() => {}).use(middleware.auth())

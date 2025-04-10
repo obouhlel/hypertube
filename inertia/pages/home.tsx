@@ -10,6 +10,7 @@ interface User {
 
 interface PageProps extends InertiaPageProps {
   csrf_token: string
+  isAuthenticate: boolean
   user?: User
 }
 
@@ -25,7 +26,7 @@ export default function Home() {
         _csrf: csrf_token,
       },
       {
-        onSuccess: () => router.visit('/login'),
+        onSuccess: () => console.log('Logout success'),
       }
     )
   }
@@ -40,8 +41,8 @@ export default function Home() {
           <button onClick={handleLogout}>Logout</button>
         ) : (
           <>
-            <Link href="/login">Login</Link>
-            <Link href="/register">Register</Link>
+            <Link href="/auth/login">Login</Link>
+            <Link href="/auth/register">Register</Link>
           </>
         )}
       </div>
