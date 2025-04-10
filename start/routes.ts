@@ -11,11 +11,15 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
 router.on('/').renderInertia('home')
-router.on('/login').renderInertia('login')
-router.on('/register').renderInertia('register')
+
+router
+  .group(() => {
+    router.on('/login').renderInertia('login')
+    router.on('/register').renderInertia('register')
+  })
+  .use(middleware.guest())
 
 const AuthController = () => import('#controllers/auth_controller')
-
 router
   .group(() => {
     router.post('register', [AuthController, 'register'])
@@ -24,13 +28,4 @@ router
   })
   .prefix('auth')
 
-router
-  .get('me', async ({ auth, response }) => {
-    try {
-      const user = auth.getUserOrFail()
-      return response.ok(user)
-    } catch (error) {
-      return response.unauthorized({ error: 'User not found' })
-    }
-  })
-  .use(middleware.auth())
+router.group(() => {}).use(middleware.auth())

@@ -27,10 +27,17 @@ export default function Register() {
     if (values.password_confirmation !== values.password) {
       return
     }
-    router.post('/auth/register', {
-      _csrf: csrf_token,
-      ...preload,
-    })
+    router.post(
+      '/auth/register',
+      {
+        _csrf: csrf_token,
+        ...preload,
+      },
+      {
+        onSuccess: () => router.visit('/login'),
+        onError: (errors) => console.log(errors),
+      }
+    )
   }
 
   return (

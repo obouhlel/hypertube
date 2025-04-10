@@ -1,29 +1,18 @@
-import React, { useState } from 'react'
-import { Head, Link, router, usePage } from '@inertiajs/react'
+import React from 'react'
+import { Head, Link, useForm } from '@inertiajs/react'
 
 export default function Login() {
-  const { csrf_token } = usePage<{ csrf_token: string }>().props
-  const [values, setValues] = useState({
+  const { data, setData, post, processing, errors } = useForm({
     email: '',
     password: '',
+    remember_me: false as boolean,
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const key = e.target.name
-    const value = e.target.value
-
-    setValues((values) => ({
-      ...values,
-      [key]: value,
-    }))
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-
-    router.post('/auth/login', {
-      _csrf: csrf_token,
-      ...values,
+    post('/auth/login', {
+      onSuccess: () => console.log('Login successful'),
+      onError: (errors) => console.log(errors),
     })
   }
 
@@ -40,9 +29,10 @@ export default function Login() {
               id="email"
               name="email"
               type="email"
-              value={values.email}
-              onChange={handleChange}
+              value={data.email}
+              onChange={(e) => setData('email', e.target.value)}
             />
+            {errors.email && <div>{errors.email}</div>}
           </div>
 
           <div>
@@ -51,13 +41,33 @@ export default function Login() {
               id="password"
               name="password"
               type="password"
-              value={values.password}
-              onChange={handleChange}
+              value={data.password}
+              onChange={(e) => setData('password', e.target.value)}
             />
+            {errors.password && <div>{errors.password}</div>}
           </div>
 
           <div>
-            <button type="submit">Login</button>
+            <div>
+              <input
+                id="remember_me"
+                name="remember_me"
+                type="checkbox"
+                checked={data.remember_me}
+                onChange={(e) => setData('remember_me', e.target.checked)}
+              />
+              <label htmlFor="remember_me">Remember me</label>
+            </div>
+
+            <div>
+              <a href="#">Forgot your password?</a>
+            </div>
+          </div>
+
+          <div>
+            <button type="submit" disabled={processing}>
+              {processing ? 'Logging in...' : 'Login'}
+            </button>
           </div>
 
           <div>
