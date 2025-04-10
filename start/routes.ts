@@ -12,9 +12,7 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
 router
-  .get('/', async (ctx: HttpContext) => {
-    return ctx.inertia.render('home')
-  })
+  .get('/', (ctx: HttpContext) => ctx.inertia.render('home'))
   .use(middleware.silentAuth())
   .as('home')
 
