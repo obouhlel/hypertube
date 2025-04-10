@@ -5,7 +5,6 @@ export default function Login() {
   const { data, setData, post, processing, errors } = useForm({
     email: '',
     password: '',
-    remember_me: false as boolean,
   })
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -48,17 +47,6 @@ export default function Login() {
           </div>
 
           <div>
-            <div>
-              <input
-                id="remember_me"
-                name="remember_me"
-                type="checkbox"
-                checked={data.remember_me}
-                onChange={(e) => setData('remember_me', e.target.checked)}
-              />
-              <label htmlFor="remember_me">Remember me</label>
-            </div>
-
             <div>
               <a href="#">Forgot your password?</a>
             </div>
