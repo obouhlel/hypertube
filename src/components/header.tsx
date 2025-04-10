@@ -1,7 +1,7 @@
 "use client";
 import { Sun, Moon, Palette, X } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { useTheme } from "./ThemeProvider";
+import { useTheme } from "./theme-provider";
 import { colors } from "@/utils/colors";
 
 export function Header() {

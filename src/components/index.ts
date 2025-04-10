@@ -1,3 +1,3 @@
-export { ThemeProvider } from "@/components/ThemeProvider";
-export { ThemeScript } from "@/components/ThemeScript";
-export { Header } from "@/components/Header";
+export { ThemeProvider } from "@/components/theme-provider";
+export { ThemeScript } from "@/components/theme-script";
+export { Header } from "@/components/header";

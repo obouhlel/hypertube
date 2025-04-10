@@ -1,6 +1,6 @@
 "use client";
 
-import { useTheme } from "@/components/ThemeProvider";
+import { useTheme } from "@/components/theme-provider";
 import Image from "next/image";
 
 export default function Page() {
