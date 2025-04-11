@@ -11,15 +11,14 @@ export default class PasswordResetsController {
     return inertia.render('password/forgot')
   }
 
-  public async send({ request, response, session }: HttpContext) {
+  public async send({ request, inertia }: HttpContext) {
     const { email } = await request.validateUsing(emailValidator)
     const user = await User.findBy('email', email)
 
     if (!user) {
-      session.flash('errors', {
-        messages: ['No account found with this email address'],
+      return inertia.render('password/forgot', {
+        errors: ['No account found with this email address'],
       })
-      return response.redirect().back()
     }
 
     const token = await Token.generatePasswordResetToken(user)
@@ -33,10 +32,9 @@ export default class PasswordResetsController {
         .html(`Reset your password by <a href="${env.get('DOMAIN')}${resetLink}">clicking here</a>`)
     })
 
-    session.flash('success', {
+    return inertia.render('password/forgot', {
       message: 'You will receive a password reset link shortly',
     })
-    return response.redirect().back()
   }
 
   public async reset({ inertia, params }: HttpContext) {
@@ -48,21 +46,19 @@ export default class PasswordResetsController {
     return inertia.render('password/reset', { isValid, token })
   }
 
-  public async store({ request, response, session }: HttpContext) {
+  public async store({ request, inertia }: HttpContext) {
     const { token, new_password: newPassword } = await request.validateUsing(newPasswordValidator)
     const user = await Token.getPasswordResetUser(token)
 
     if (!user) {
-      session.flash('errors', {
-        messages: ['No account found'],
+      return inertia.render('password/reset', {
+        errors: ['No account found'],
       })
-      return response.redirect().back()
     }
 
     await user.merge({ password: newPassword }).save()
-    session.flash('success', {
+    return inertia.render('login', {
       message: 'Password update, try to connect',
     })
-    return response.redirect().back()
   }
 }
