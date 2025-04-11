@@ -35,4 +35,12 @@ export default await Env.create(new URL('../', import.meta.url), {
   POSTGRES_USER: Env.schema.string(),
   POSTGRES_PASSWORD: Env.schema.string.optional(),
   POSTGRES_DB: Env.schema.string(),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring the mail package
+  |----------------------------------------------------------
+  */
+  SMTP_HOST: Env.schema.string(),
+  SMTP_PORT: Env.schema.string(),
 })

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Head, Link, useForm } from '@inertiajs/react'
 import Layout from '~/layouts/Layout'
-import { Input, ErrorPopup } from '~/components'
+import { Input, ErrorPopup, Github } from '~/components'
 
 export default function Login() {
   const { data, setData, post, processing } = useForm({
@@ -53,7 +53,7 @@ export default function Login() {
               </a>
             </div>
 
-            <div>
+            <div className="flex flex-col space-y-4">
               <button
                 type="submit"
                 disabled={processing}
@@ -61,6 +61,7 @@ export default function Login() {
               >
                 {processing ? 'Logging in...' : 'Login'}
               </button>
+              <Github />
             </div>
 
             <div className="text-center">

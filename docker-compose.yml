@@ -1,19 +1,40 @@
 services:
+  mailpit:
+    image: axllent/mailpit
+    container_name: mailpit
+    restart: always
+    volumes:
+      - ./data:/data
+    environment:
+      - MP_DATABASE=/data/mailpit.db
+      - MP_UI_AUTH_FILE=/data/authfile
+      - TZ=Europe/Paris
+    ports:
+      - '8025:8025'
+      - '1025:1025'
+    networks:
+      - hypertube_net
   db:
     image: postgres:16-alpine
     container_name: postgres
+    restart: always
     env_file:
       - .env
     ports:
       - '5432:5432'
-
+    networks:
+      - hypertube_net
   adminer:
     image: adminer:latest
     container_name: adminer
+    restart: always
     ports:
       - '8080:8080'
     depends_on:
       - db
+    networks:
+      - hypertube_net
 
-volumes:
-  postgres_data:
+networks:
+  hypertube_net:
+    driver: bridge
