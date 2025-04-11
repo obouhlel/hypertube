@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import { useState, ChangeEvent, FormEvent } from 'react'
 import { Head, Link, useForm } from '@inertiajs/react'
 import Layout from '~/layouts/Layout'
-import { Input, ErrorPopup, Github } from '~/components'
+import { Input, ErrorPopup, Github, Button } from '~/components'
 
 export default function Login() {
   const { data, setData, post, processing } = useForm({
@@ -11,7 +11,14 @@ export default function Login() {
   const [errors, setErrors] = useState<string[]>([])
   const [popupVisible, setPopupVisible] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const key = e.target.name as keyof typeof data
+    const value = e.target.value
+
+    setData(key as keyof typeof data, value)
+  }
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     post('/auth/login', {
       onSuccess: () => console.log('Login successful'),
@@ -35,7 +42,7 @@ export default function Login() {
               name="username"
               type="text"
               value={data.username}
-              onChange={(e) => setData('username', e.target.value)}
+              onChange={handleChange}
               label="Username"
             />
             <Input
@@ -43,7 +50,7 @@ export default function Login() {
               name="password"
               type="password"
               value={data.password}
-              onChange={(e) => setData('password', e.target.value)}
+              onChange={handleChange}
               label="Password"
             />
 
@@ -54,13 +61,9 @@ export default function Login() {
             </div>
 
             <div className="flex flex-col space-y-4">
-              <button
-                type="submit"
-                disabled={processing}
-                className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
-              >
+              <Button type="submit" disabled={processing}>
                 {processing ? 'Logging in...' : 'Login'}
-              </button>
+              </Button>
               <Github />
             </div>
 
