@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from 'react'
+import { Input, ErrorPopup, Button } from '~/components'
 import { Link, Head, useForm } from '@inertiajs/react'
 import Layout from '~/layouts/Layout'
-import { Input, ErrorPopup, Button } from '~/components'
 
 export default function Register() {
   const { data, setData, post, processing, errors } = useForm({

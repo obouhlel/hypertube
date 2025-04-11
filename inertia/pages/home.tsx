@@ -1,5 +1,5 @@
-import { Head, usePage } from '@inertiajs/react'
 import { PageProps as InertiaPageProps } from '@inertiajs/core'
+import { Head, usePage } from '@inertiajs/react'
 import Layout from '~/layouts/Layout'
 
 interface User {

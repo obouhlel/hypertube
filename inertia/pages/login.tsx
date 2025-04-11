@@ -1,7 +1,7 @@
+import { Input, ErrorPopup, Github, Button } from '~/components'
 import { useState, ChangeEvent, FormEvent } from 'react'
 import { Head, Link, useForm } from '@inertiajs/react'
 import Layout from '~/layouts/Layout'
-import { Input, ErrorPopup, Github, Button } from '~/components'
 
 export default function Login() {
   const { data, setData, post, processing } = useForm({
