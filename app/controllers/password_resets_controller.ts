@@ -6,43 +6,41 @@ import env from '#start/env'
 import router from '@adonisjs/core/services/router'
 import mail from '@adonisjs/mail/services/main'
 
-// TODO: Changer le type de reponse pour que ca ouvre pas une popup d'inertia
 export default class PasswordResetsController {
   public async forgot({ inertia }: HttpContext) {
     return inertia.render('password/forgot')
   }
 
-  public async send({ request, response }: HttpContext) {
+  public async send({ request, response, session }: HttpContext) {
     const { email } = await request.validateUsing(emailValidator)
     const user = await User.findBy('email', email)
-    if (!user) {
-      return response.status(404).json({
-        errors: {
-          email: ['No account found with this email address'],
-        },
-      })
-    }
-    const token = await Token.generatePasswordResetToken(user)
-    const resetLink = router.makeUrl('/password-reset', [token]) // TODO: Trouver ou il stock le token
 
-    if (user) {
-      await mail.sendLater((message) => {
-        message
-          .from('noreply@hypertube.com')
-          .to(user.email)
-          .subject('Password Reset on hypertube')
-          .html(
-            `Reset your password by <a href="${env.get('DOMAIN')}${resetLink}">clicking here</a>`
-          )
+    if (!user) {
+      session.flash('errors', {
+        messages: ['No account found with this email address'],
       })
+      return response.redirect().back()
     }
-    response.status(200).json({
+
+    const token = await Token.generatePasswordResetToken(user)
+    const resetLink = router.makeUrl('password.reset', [token])
+
+    await mail.sendLater((message) => {
+      message
+        .from('noreply@hypertube.com')
+        .to(user.email)
+        .subject('Password Reset on hypertube')
+        .html(`Reset your password by <a href="${env.get('DOMAIN')}${resetLink}">clicking here</a>`)
+    })
+
+    session.flash('success', {
       message: 'You will receive a password reset link shortly',
     })
+    return response.redirect().back()
   }
 
   public async reset({ inertia, params }: HttpContext) {
-    const token = params.token // TODO: Trouver le token dans l'url
+    const token = params.token
     if (!token) {
       return inertia.render('password/reset')
     }
@@ -50,20 +48,21 @@ export default class PasswordResetsController {
     return inertia.render('password/reset', { isValid, token })
   }
 
-  public async store({ request, response }: HttpContext) {
+  public async store({ request, response, session }: HttpContext) {
     const { token, new_password: newPassword } = await request.validateUsing(newPasswordValidator)
     const user = await Token.getPasswordResetUser(token)
 
     if (!user) {
-      return response.status(404).json({
-        errors: {
-          email: ['No account found'],
-        },
+      session.flash('errors', {
+        messages: ['No account found'],
       })
+      return response.redirect().back()
     }
+
     await user.merge({ password: newPassword }).save()
-    response.status(200).json({
+    session.flash('success', {
       message: 'Password update, try to connect',
     })
+    return response.redirect().back()
   }
 }
