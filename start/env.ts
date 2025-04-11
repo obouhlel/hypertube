@@ -18,7 +18,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   HOST: Env.schema.string({ format: 'host' }),
   LOG_LEVEL: Env.schema.string(),
   VITE_APP_NAME: Env.schema.string(),
-  DOMAIN: Env.schema.string({ format: 'url' }),
+  DOMAIN: Env.schema.string(),
 
   /*
   |----------------------------------------------------------

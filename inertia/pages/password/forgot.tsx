@@ -31,29 +31,37 @@ export default function PasswordResetEmail() {
   return (
     <Layout>
       <Head title="Forgot Password" />
-      <div className="container mx-auto px-4 py-8">
-        {popupVisible && <ErrorPopup errors={errors} onClose={() => setPopupVisible(false)} />}
-        <h1 className="text-center text-6xl font-bold mb-5">Reset Your Password</h1>
-        <p className="text-center text-3xl">Please enter your new email below:</p>
-        <form onSubmit={handleSubmit}>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            value={data.email}
-            onChange={handleChange}
-            label="Email"
-          />
-          <Button type="submit" disabled={processing}>
-            {processing ? 'Sending...' : 'Send Password Reset Link'}
-          </Button>
-        </form>
-        <p className="text-center mt-4">
-          Remembered your password? <Link href="/auth/login">Login</Link>
-        </p>
-        <p className="text-center mt-2">
-          Don't have an account? <Link href="/auth/register">Register</Link>
-        </p>
+      <div className="flex items-center justify-center">
+        <div className="bg-gray-100 p-8 rounded shadow-md w-full max-w-md md:max-w-lg">
+          {popupVisible && <ErrorPopup errors={errors} onClose={() => setPopupVisible(false)} />}
+          <h1 className="text-center text-6xl font-bold mb-5 text-black">Reset Your Password</h1>
+          <p className="text-center text-3xl text-black">Please enter your new email below:</p>
+          <form className="space-y-2" onSubmit={handleSubmit}>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              value={data.email}
+              onChange={handleChange}
+              label="Email"
+            />
+            <Button type="submit" disabled={processing}>
+              {processing ? 'Sending...' : 'Send Password Reset Link'}
+            </Button>
+          </form>
+          <p className="text-center mt-4 text-black">
+            Remembered your password?{' '}
+            <Link href="/auth/login" className="text-blue-500 hover:underline">
+              Login
+            </Link>
+          </p>
+          <p className="text-center mt-2 text-black">
+            Don't have an account?{' '}
+            <Link href="/auth/register" className="text-blue-500 hover:underline">
+              Register
+            </Link>
+          </p>
+        </div>
       </div>
     </Layout>
   )

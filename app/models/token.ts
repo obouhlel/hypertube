@@ -9,7 +9,7 @@ export default class Token extends BaseModel {
   declare id: number
 
   @column()
-  declare userId: number | null
+  declare userId: number
 
   @column()
   declare type: string
@@ -29,10 +29,8 @@ export default class Token extends BaseModel {
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 
-  public static async generatePasswordResetToken(user: User | null) {
+  public static async generatePasswordResetToken(user: User) {
     const token = string.generateRandom(64)
-
-    if (!user) return token
 
     await Token.expirePasswordResetToken(user)
     const record = await user.related('passwordResetTokens').create({
@@ -59,15 +57,15 @@ export default class Token extends BaseModel {
     const record = await Token.query()
       .preload('user')
       .where('token', token)
-      .where('expires_at', '>', DateTime.now().toSQL())
-      .orderBy('created_at', 'desc')
+      .where('expiresAt', '>', DateTime.now().toSQL())
+      .orderBy('createdAt', 'desc')
       .first()
     return record?.user
   }
 
   public static async verify(token: string) {
     const record = await Token.query()
-      .where('expires_at', '>', DateTime.now().toSQL())
+      .where('expiresAt', '>', DateTime.now().toSQL())
       .where('token', token)
       .first()
     return !!record

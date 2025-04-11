@@ -8,6 +8,7 @@ export const emailValidator = vine.compile(
 
 export const newPasswordValidator = vine.compile(
   vine.object({
+    token: vine.string().fixedLength(64),
     new_password: vine.string().minLength(6).maxLength(512),
   })
 )

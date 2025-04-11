@@ -48,7 +48,7 @@ export function Header() {
           {user ? (
             <button
               onClick={handleLogout}
-              className="h-full text-2xl px-2 border-x font-bold flex items-center bg-sky-800 text-white hover:bg-sky-700 active:bg-sky-700"
+              className="h-full text-2xl px-2 border-x font-bold flex items-center bg-sky-800 text-white hover:bg-sky-700 active:bg-sky-700 cursor-pointer"
             >
               Logout
             </button>

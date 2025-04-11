@@ -1,19 +1,27 @@
+import { Head, Link, useForm, usePage } from '@inertiajs/react'
 import { Button, Input, ErrorPopup } from '~/components'
 import { useState, FormEvent } from 'react'
-import { Head, Link, useForm } from '@inertiajs/react'
 import Layout from '~/layouts/Layout'
 
+interface PageProps {
+  isValid: boolean
+  token: string
+  [key: string]: any
+}
+
 export default function PasswordResetEmail() {
+  const { isValid, token } = usePage<PageProps>().props
   const { data, setData, post, processing } = useForm({
+    token: token,
     new_password: '',
-    confirm_new_password: '',
   })
   const [popupVisible, setPopupVisible] = useState(false)
+  const [confrimNewPassword, setConfirmNewPassword] = useState('')
   const [errors, setErrors] = useState<string[]>([])
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (data.new_password !== data.confirm_new_password) {
+    if (data.new_password !== confrimNewPassword) {
       setErrors(['Passwords do not match'])
       setPopupVisible(true)
       return
@@ -34,40 +42,57 @@ export default function PasswordResetEmail() {
     setData(key, value)
   }
 
+  if (!isValid) {
+    return (
+      <Layout>
+        <Head title="Reset Password" />
+        <p className="text-6xl">Your token is invalid</p>
+      </Layout>
+    )
+  }
+
   return (
     <Layout>
       <Head title="Reset Password" />
-      <div className="container mx-auto px-4 py-8">
-        {popupVisible && <ErrorPopup errors={errors} onClose={() => setPopupVisible(false)} />}
-        <h1 className="text-center text-6xl font-bold mb-5">Reset Your Password</h1>
-        <p className="text-center text-3xl">Please enter your new password below:</p>
-        <form onSubmit={handleSubmit}>
-          <Input
-            id="new_password"
-            name="new_password"
-            type="password"
-            value={data.new_password}
-            onChange={handleChange}
-            label="New Password"
-          />
-          <Input
-            id="confirm_new_password"
-            name="confirm_new_password"
-            type="password"
-            value={data.confirm_new_password}
-            onChange={handleChange}
-            label="Confirm Password"
-          />
-          <Button type="submit" disabled={processing}>
-            {processing ? 'Resetting...' : 'Reset Password'}
-          </Button>
-        </form>
-        <p className="text-center mt-4">
-          Remembered your password? <Link href="/auth/login">Login</Link>
-        </p>
-        <p className="text-center mt-2">
-          Don't have an account? <Link href="/auth/register">Register</Link>
-        </p>
+      <div className="flex items-center justify-center">
+        <div className="bg-gray-100 p-8 rounded shadow-md w-full max-w-md md:max-w-lg text-black">
+          {popupVisible && <ErrorPopup errors={errors} onClose={() => setPopupVisible(false)} />}
+          <h1 className="text-center text-6xl font-bold mb-5">Reset Your Password</h1>
+          <p className="text-center text-3xl">Please enter your new password below:</p>
+          <form onSubmit={handleSubmit} className="space-y-2">
+            <Input
+              id="new_password"
+              name="new_password"
+              type="password"
+              value={data.new_password}
+              onChange={handleChange}
+              label="New Password"
+            />
+            <Input
+              id="confirm_new_password"
+              name="confirm_new_password"
+              type="password"
+              value={confrimNewPassword}
+              onChange={(e) => setConfirmNewPassword(e.target.value)}
+              label="Confirm Password"
+            />
+            <Button type="submit" disabled={processing}>
+              {processing ? 'Resetting...' : 'Reset Password'}
+            </Button>
+          </form>
+          <p className="text-center mt-4 text-black">
+            Remembered your password?{' '}
+            <Link href="/auth/login" className="text-blue-500 hover:underline">
+              Login
+            </Link>
+          </p>
+          <p className="text-center mt-2 text-black">
+            Don't have an account?{' '}
+            <Link href="/auth/register" className="text-blue-500 hover:underline">
+              Register
+            </Link>
+          </p>
+        </div>
       </div>
     </Layout>
   )
