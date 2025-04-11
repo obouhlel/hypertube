@@ -7,18 +7,9 @@ export default class LoginController {
     return inertia.render('login')
   }
 
-  async store({ request, response, auth, inertia }: HttpContext) {
+  async store({ request, response, auth }: HttpContext) {
     const { username, password } = await request.validateUsing(loginValidator)
-    const userTmpResult = await User.query().where('username', username).first()
-    if (!userTmpResult) {
-      return inertia.render('login', {
-        errors: {
-          form: 'Bad username or password',
-        },
-      })
-    }
-    const userTmp = userTmpResult
-    const user = await User.verifyCredentials(userTmp.email, password)
+    const user = await User.verifyCredentials(username, password)
     await auth.use('web').login(user)
     return response.redirect('/')
   }
