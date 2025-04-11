@@ -1,19 +1,4 @@
 services:
-  mailpit:
-    image: axllent/mailpit
-    container_name: mailpit
-    restart: always
-    volumes:
-      - ./data:/data
-    environment:
-      - MP_DATABASE=/data/mailpit.db
-      - MP_UI_AUTH_FILE=/data/authfile
-      - TZ=Europe/Paris
-    ports:
-      - '8025:8025'
-      - '1025:1025'
-    networks:
-      - hypertube_net
   db:
     image: postgres:16-alpine
     container_name: postgres
