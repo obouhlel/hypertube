@@ -30,9 +30,9 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring database connection
   |----------------------------------------------------------
   */
-  DB_HOST: Env.schema.string({ format: 'host' }),
-  DB_PORT: Env.schema.number(),
-  DB_USER: Env.schema.string(),
-  DB_PASSWORD: Env.schema.string.optional(),
-  DB_DATABASE: Env.schema.string(),
+  POSTGRES_HOST: Env.schema.string({ format: 'host' }),
+  POSTGRES_PORT: Env.schema.number(),
+  POSTGRES_USER: Env.schema.string(),
+  POSTGRES_PASSWORD: Env.schema.string.optional(),
+  POSTGRES_DB: Env.schema.string(),
 })
