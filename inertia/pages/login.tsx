@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Head, Link, useForm } from '@inertiajs/react'
 import Layout from '~/layouts/Layout'
+import { Input, ErrorPopup } from '~/components'
 
 export default function Login() {
   const { data, setData, post, processing } = useForm({
@@ -29,33 +30,22 @@ export default function Login() {
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Login</h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="username" className="block text-gray-800 font-medium mb-1">
-                Username
-              </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                value={data.username}
-                onChange={(e) => setData('username', e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-gray-800 font-medium mb-1">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={data.password}
-                onChange={(e) => setData('password', e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              value={data.username}
+              onChange={(e) => setData('username', e.target.value)}
+              label="Username"
+            />
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              value={data.password}
+              onChange={(e) => setData('password', e.target.value)}
+              label="Password"
+            />
 
             <div className="text-right">
               <a href="#" className="text-blue-500 hover:underline">
@@ -82,27 +72,7 @@ export default function Login() {
         </div>
       </div>
 
-      {popupVisible && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96 md:w-[500px]">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Error</h2>
-            <ul className="text-xl text-gray-600 space-y-2">
-              {errors.map((error, index) => (
-                <li key={index} className="flex items-center">
-                  <span className="text-red-500 font-bold mr-2">•</span>
-                  {error}
-                </li>
-              ))}
-            </ul>
-            <button
-              onClick={() => setPopupVisible(false)}
-              className="mt-6 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+      {popupVisible && <ErrorPopup errors={errors} onClose={() => setPopupVisible(false)} />}
     </Layout>
   )
 }
