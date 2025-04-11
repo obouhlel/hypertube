@@ -1,21 +1,30 @@
-import { Button, Input, ErrorPopup } from '~/components'
-import { useState, FormEvent } from 'react'
-import { Head, Link, useForm } from '@inertiajs/react'
+import { Head, Link, useForm, usePage } from '@inertiajs/react'
+import { Button, Input, ErrorPopup, SuccessPopup } from '~/components'
+import { useState, FormEvent, useEffect } from 'react'
 import Layout from '~/layouts/Layout'
 
 export default function PasswordResetEmail() {
+  const { message } = usePage().props
   const { data, setData, post, processing } = useForm({
     email: '',
   })
   const [popupVisible, setPopupVisible] = useState(false)
   const [errors, setErrors] = useState<string[]>([])
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (message) {
+      setSuccessMessage(message as string)
+      setPopupVisible(true)
+    }
+  }, [message])
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     post('/forgot-password', {
-      onSuccess: () => console.log('Password reset link sent'),
       onError: (errors) => {
         setErrors(Object.values(errors))
+        setSuccessMessage(null)
         setPopupVisible(true)
       },
     })
@@ -33,7 +42,12 @@ export default function PasswordResetEmail() {
       <Head title="Forgot Password" />
       <div className="flex items-center justify-center">
         <div className="bg-gray-100 p-8 rounded shadow-md w-full max-w-md md:max-w-lg">
-          {popupVisible && <ErrorPopup errors={errors} onClose={() => setPopupVisible(false)} />}
+          {popupVisible &&
+            (successMessage ? (
+              <SuccessPopup message={successMessage} onClose={() => setPopupVisible(false)} />
+            ) : (
+              <ErrorPopup errors={errors} onClose={() => setPopupVisible(false)} />
+            ))}
           <h1 className="text-center text-6xl font-bold mb-5 text-black">Reset Your Password</h1>
           <p className="text-center text-3xl text-black">Please enter your new email below:</p>
           <form className="space-y-2" onSubmit={handleSubmit}>
