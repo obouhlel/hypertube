@@ -1,0 +1,60 @@
+import { Button, Input, ErrorPopup } from '~/components'
+import { useState, FormEvent } from 'react'
+import { Head, Link, useForm } from '@inertiajs/react'
+import Layout from '~/layouts/Layout'
+
+export default function PasswordResetEmail() {
+  const { data, setData, post, processing } = useForm({
+    email: '',
+  })
+  const [popupVisible, setPopupVisible] = useState(false)
+  const [errors, setErrors] = useState<string[]>([])
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    post('/forgot-password', {
+      onSuccess: () => console.log('Password reset link sent'),
+      onError: (errors) => {
+        setErrors(Object.values(errors))
+        setPopupVisible(true)
+      },
+    })
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const key = e.target.name as keyof typeof data
+    const value = e.target.value
+
+    setData(key as keyof typeof data, value)
+  }
+
+  return (
+    <Layout>
+      <Head title="Forgot Password" />
+      <div className="container mx-auto px-4 py-8">
+        {popupVisible && <ErrorPopup errors={errors} onClose={() => setPopupVisible(false)} />}
+        <h1 className="text-center text-6xl font-bold mb-5">Reset Your Password</h1>
+        <p className="text-center text-3xl">Please enter your new email below:</p>
+        <form onSubmit={handleSubmit}>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            value={data.email}
+            onChange={handleChange}
+            label="Email"
+          />
+          <Button type="submit" disabled={processing}>
+            {processing ? 'Sending...' : 'Send Password Reset Link'}
+          </Button>
+        </form>
+        <p className="text-center mt-4">
+          Remembered your password? <Link href="/auth/login">Login</Link>
+        </p>
+        <p className="text-center mt-2">
+          Don't have an account? <Link href="/auth/register">Register</Link>
+        </p>
+      </div>
+    </Layout>
+  )
+}

@@ -10,9 +10,9 @@ export default function Register() {
     last_name: '',
     email: '',
     password: '',
-    password_confirmation: '',
   })
   const [popupVisible, setPopupVisible] = useState(false)
+  const [confirmPassword, setConfirmPassword] = useState('')
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const key = e.target.name as keyof typeof data
@@ -24,7 +24,7 @@ export default function Register() {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (data.password_confirmation !== data.password) {
+    if (confirmPassword !== data.password) {
       setPopupVisible(true)
       return
     }
@@ -92,11 +92,11 @@ export default function Register() {
               label="Password"
             />
             <Input
-              id="password_confirmation"
-              name="password_confirmation"
+              id="confirm_password"
+              name="confirm_password"
               type="password"
-              value={data.password_confirmation}
-              onChange={handleChange}
+              value={confirmPassword}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
               label="Confirm Password"
             />
             <div>

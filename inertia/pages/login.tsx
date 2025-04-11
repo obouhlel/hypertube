@@ -55,9 +55,9 @@ export default function Login() {
             />
 
             <div className="text-right">
-              <a href="#" className="text-blue-500 hover:underline">
+              <Link href="/forgot-password" className="text-blue-500 hover:underline">
                 Forgot your password?
-              </a>
+              </Link>
             </div>
 
             <div className="flex flex-col space-y-4">

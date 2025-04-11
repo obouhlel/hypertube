@@ -2,8 +2,8 @@ import vine from '@vinejs/vine'
 
 export const loginValidator = vine.compile(
   vine.object({
-    username: vine.string(),
-    password: vine.string().minLength(6),
+    username: vine.string().minLength(3).maxLength(64),
+    password: vine.string().minLength(6).maxLength(512),
   })
 )
 
@@ -27,5 +27,6 @@ export const registerValidator = vine.compile(
         return !user
       }),
     password: vine.string().minLength(6).maxLength(512),
+    confirm_password: vine.string().minLength(6).maxLength(512),
   })
 )
