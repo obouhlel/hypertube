@@ -68,6 +68,7 @@
     "@inertiajs/react": "2.0.8",
     "@tailwindcss/vite": "4.1.3",
     "@vinejs/vine": "3.0.1",
+    "ally-forty-two-service": "file:forty-two",
     "edge.js": "6.2.1",
     "lucide-react": "0.487.0",
     "luxon": "3.6.1",
