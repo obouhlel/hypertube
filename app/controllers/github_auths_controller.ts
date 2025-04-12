@@ -13,8 +13,18 @@ export default class GithubAuthController {
   async callback({ ally, inertia, auth }: HttpContext) {
     const github = ally.use('github')
 
-    if (github.accessDenied() || github.stateMisMatch() || github.hasError()) {
-      return inertia.render('login')
+    if (github.accessDenied()) {
+      return inertia.render('login', { errors: 'Access to GitHub was denied.' })
+    }
+
+    if (github.stateMisMatch()) {
+      return inertia.render('login', { errors: 'State mismatch detected. Please try again.' })
+    }
+
+    if (github.hasError()) {
+      return inertia.render('login', {
+        errors: 'An unknown error occurred during GitHub authentication.',
+      })
     }
 
     const githubUser = await github.user()
@@ -30,12 +40,15 @@ export default class GithubAuthController {
       }
     )
 
-    await Token.create({
-      userId: user.id,
-      type: 'GITHUB',
-      token: githubUser.token.token,
-      expiresAt: null,
-    })
+    await Token.firstOrCreate(
+      { userId: user.id, type: 'GITHUB' },
+      {
+        userId: user.id,
+        type: 'GITHUB',
+        token: githubUser.token.token,
+        expiresAt: null,
+      }
+    )
 
     await auth.use('web').login(user)
 
