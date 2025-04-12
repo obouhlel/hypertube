@@ -37,6 +37,14 @@ router
   })
   .prefix('auth')
 
+const GithubAuthController = () => import('#controllers/github_auths_controller')
+router
+  .group(() => {
+    router.get('/redirect', [GithubAuthController, 'redirect']).as('github.redirect')
+  })
+  .use(middleware.guest())
+  .prefix('github')
+
 const PasswordResetsController = () => import('#controllers/password_resets_controller')
 router
   .group(() => {

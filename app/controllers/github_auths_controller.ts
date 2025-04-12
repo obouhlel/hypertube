@@ -2,7 +2,9 @@ import { HttpContext } from '@adonisjs/core/http'
 
 export default class GithubAuthController {
   async redirect({ ally }: HttpContext) {
-    return ally.use('github').redirect()
+    return ally.use('github').redirect((request) => {
+      request.scopes(['user'])
+    })
   }
 
   async callback({ ally, auth, response }: HttpContext) {

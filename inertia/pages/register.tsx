@@ -44,7 +44,7 @@ export default function Register() {
       <Head title="Register" />
       <div className="flex items-center justify-center">
         <div className="bg-gray-100 p-8 rounded shadow-md w-full max-w-md md:max-w-lg">
-          <h1 className="text-2xl font-bold text-gray-800 mb-6">Sign Up</h1>
+          <h1 className="text-2xl font-bold text-gray-800 mb-6">Sign up</h1>
 
           {popupVisible && (
             <ErrorPopup errors={Object.values(errors)} onClose={() => setPopupVisible(false)} />
@@ -99,10 +99,22 @@ export default function Register() {
               onChange={(e: ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
               label="Confirm Password"
             />
-            <div>
+            <div className="flex flex-col space-y-4">
               <Button type="submit" disabled={processing}>
-                Sign Up
+                Sign up
               </Button>
+              <Link
+                className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
+                href="/github/redirect"
+              >
+                Sign up with Github
+              </Link>
+              <Link
+                className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
+                href="/github/redirect"
+              >
+                Sign up with Forty Two
+              </Link>
             </div>
 
             <div className="text-center">

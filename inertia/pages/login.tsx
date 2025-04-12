@@ -1,4 +1,4 @@
-import { Input, ErrorPopup, Github, Button, SuccessPopup } from '~/components'
+import { Input, ErrorPopup, Button, SuccessPopup } from '~/components'
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react'
 import { Head, Link, useForm, usePage } from '@inertiajs/react'
 import Layout from '~/layouts/Layout'
@@ -79,7 +79,18 @@ export default function Login() {
               <Button type="submit" disabled={processing}>
                 {processing ? 'Logging in...' : 'Login'}
               </Button>
-              <Github />
+              <Link
+                className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
+                href="/github/redirect"
+              >
+                Login with Github
+              </Link>
+              <Link
+                className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
+                href="/github/redirect"
+              >
+                Login with Forty Two
+              </Link>
             </div>
 
             <div className="text-center">
