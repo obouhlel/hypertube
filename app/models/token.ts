@@ -18,7 +18,7 @@ export default class Token extends BaseModel {
   declare token: string
 
   @column()
-  declare expiresAt: DateTime
+  declare expiresAt: DateTime | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

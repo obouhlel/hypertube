@@ -41,6 +41,7 @@ const GithubAuthController = () => import('#controllers/github_auths_controller'
 router
   .group(() => {
     router.get('/redirect', [GithubAuthController, 'redirect']).as('github.redirect')
+    router.get('/callback', [GithubAuthController, 'callback']).as('github.callback')
   })
   .use(middleware.guest())
   .prefix('github')

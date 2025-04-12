@@ -1,4 +1,7 @@
 import { HttpContext } from '@adonisjs/core/http'
+import string from '@adonisjs/core/helpers/string'
+import User from '#models/user'
+import Token from '#models/token'
 
 export default class GithubAuthController {
   async redirect({ ally }: HttpContext) {
@@ -7,45 +10,38 @@ export default class GithubAuthController {
     })
   }
 
-  async callback({ ally, auth, response }: HttpContext) {
+  async callback({ ally, inertia, auth }: HttpContext) {
     const github = ally.use('github')
 
-    // Gérer les erreurs possibles pendant l'authentification
-    if (github.accessDenied()) {
-      return response.redirect().toRoute('login')
+    if (github.accessDenied() || github.stateMisMatch() || github.hasError()) {
+      return inertia.render('login')
     }
 
-    if (github.stateMisMatch()) {
-      return response.redirect().toRoute('login')
-    }
-
-    if (github.hasError()) {
-      return response.redirect().toRoute('login')
-    }
-
-    // Récupérer le profil utilisateur
     const githubUser = await github.user()
 
-    // Ici, vous devez implémenter la logique pour :
-    // 1. Rechercher l'utilisateur dans votre base de données par son githubId
-    // 2. Créer un nouvel utilisateur s'il n'existe pas
-    // 3. Connecter l'utilisateur avec auth.login()
-
-    // Exemple simplifié :
-    /*
     const user = await User.firstOrCreate(
-      { github_id: githubUser.id },
+      { email: githubUser.email },
       {
-        github_id: githubUser.id,
-        email: githubUser.email,
-        name: githubUser.name,
-        avatar: githubUser.avatarUrl,
+        username: githubUser.original.login,
+        first_name: githubUser.name?.split(' ')[0] || '',
+        last_name: githubUser.name?.split(' ')[1] || '',
+        password: string.generateRandom(64),
+        language: 'en',
       }
     )
-    
-    await auth.login(user)
-    */
 
-    return response.redirect().toRoute('dashboard')
+    await Token.create({
+      userId: user.id,
+      type: 'GITHUB',
+      token: githubUser.token.token,
+      expiresAt: null,
+    })
+
+    await auth.use('web').login(user)
+
+    return inertia.render('home', {
+      message:
+        'Your account created, a random password set, if you want change please use forgot password',
+    })
   }
 }
