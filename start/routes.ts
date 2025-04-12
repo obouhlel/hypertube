@@ -37,7 +37,7 @@ router
   })
   .prefix('auth')
 
-const GithubAuthController = () => import('#controllers/github_auths_controller')
+const GithubAuthController = () => import('#controllers/github_auth_controller')
 router
   .group(() => {
     router.get('/redirect', [GithubAuthController, 'redirect']).as('github.redirect')
@@ -45,6 +45,15 @@ router
   })
   .use(middleware.guest())
   .prefix('github')
+
+const FortyTwoAuthController = () => import('#controllers/forty_two_auths_controller')
+router
+  .group(() => {
+    router.get('/redirect', [FortyTwoAuthController, 'redirect']).as('fortytwo.redirect')
+    router.get('/callback', [GithubAuthController, 'callback']).as('fortytwo.callback')
+  })
+  .use(middleware.guest())
+  .prefix('fortytwo')
 
 const PasswordResetsController = () => import('#controllers/password_resets_controller')
 router
