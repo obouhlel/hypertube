@@ -33,7 +33,8 @@ export default class PasswordResetsController {
     })
 
     return inertia.render('password/forgot', {
-      message: 'You will receive a password reset link shortly',
+      message:
+        'You will receive a password reset link shortly, after you have 1 hour to reset your password',
     })
   }
 

@@ -1,4 +1,5 @@
 import { HttpContext } from '@adonisjs/core/http'
+import hash from '@adonisjs/core/services/hash'
 import string from '@adonisjs/core/helpers/string'
 import User from '#models/user'
 import Token from '#models/token'
@@ -40,12 +41,13 @@ export default class GithubAuthController {
       }
     )
 
+    const token = await hash.make(githubUser.token.token)
     await Token.firstOrCreate(
       { userId: user.id, type: 'GITHUB' },
       {
         userId: user.id,
         type: 'GITHUB',
-        token: githubUser.token.token,
+        token: token,
         expiresAt: null,
       }
     )

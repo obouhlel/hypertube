@@ -1,8 +1,9 @@
-import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
-import User from './user.js'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
+import { DateTime } from 'luxon'
+import hash from '@adonisjs/core/services/hash'
 import string from '@adonisjs/core/helpers/string'
+import User from './user.js'
 
 export default class Token extends BaseModel {
   @column({ isPrimary: true })
@@ -30,15 +31,16 @@ export default class Token extends BaseModel {
   declare user: BelongsTo<typeof User>
 
   public static async generatePasswordResetToken(user: User) {
-    const token = string.generateRandom(64)
+    const plainToken = string.generateRandom(64)
 
     await Token.expirePasswordResetToken(user)
-    const record = await user.related('passwordResetTokens').create({
+    const token = await hash.make(plainToken)
+    await user.related('passwordResetTokens').create({
       type: 'PASSWORD_RESET',
       token,
       expiresAt: DateTime.now().plus({ hours: 1 }),
     })
-    return record.token
+    return plainToken
   }
 
   public static async expirePasswordResetToken(user: User) {
@@ -54,20 +56,34 @@ export default class Token extends BaseModel {
   }
 
   public static async getPasswordResetUser(token: string) {
-    const record = await Token.query()
+    const tokens = await Token.query()
       .preload('user')
-      .where('token', token)
+      .where('type', 'PASSWORD_RESET')
       .where('expiresAt', '>', DateTime.now().toSQL())
       .orderBy('createdAt', 'desc')
-      .first()
-    return record?.user
+
+    for (const record of tokens) {
+      const isValid = await hash.verify(record.token, token)
+      if (isValid) {
+        return record.user
+      }
+    }
+
+    return null
   }
 
   public static async verify(token: string) {
-    const record = await Token.query()
+    const tokens = await Token.query()
       .where('expiresAt', '>', DateTime.now().toSQL())
-      .where('token', token)
-      .first()
-    return !!record
+      .orderBy('createdAt', 'desc')
+
+    for (const record of tokens) {
+      const isValid = await hash.verify(record.token, token)
+      if (isValid) {
+        return true
+      }
+    }
+
+    return false
   }
 }
