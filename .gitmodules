@@ -1,0 +1,3 @@
+[submodule "forty-two"]
+	path = forty-two
+	url = git@github.com:obouhlel/ally-forty-two.git
