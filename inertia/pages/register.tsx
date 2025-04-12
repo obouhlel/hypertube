@@ -103,18 +103,18 @@ export default function Register() {
               <Button type="submit" disabled={processing}>
                 Sign up
               </Button>
-              <Link
+              <a
                 className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
                 href="/github/redirect"
               >
                 Sign up with Github
-              </Link>
-              <Link
+              </a>
+              <a
                 className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
                 href="/fortytwo/redirect"
               >
                 Sign up with Forty Two
-              </Link>
+              </a>
             </div>
 
             <div className="text-center">

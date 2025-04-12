@@ -79,18 +79,18 @@ export default function Login() {
               <Button type="submit" disabled={processing}>
                 {processing ? 'Logging in...' : 'Login'}
               </Button>
-              <Link
+              <a
                 className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
                 href="/github/redirect"
               >
                 Login with Github
-              </Link>
-              <Link
+              </a>
+              <a
                 className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
                 href="/fortytwo/redirect"
               >
                 Login with Forty Two
-              </Link>
+              </a>
             </div>
 
             <div className="text-center">
