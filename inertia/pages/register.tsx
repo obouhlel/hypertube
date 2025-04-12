@@ -111,7 +111,7 @@ export default function Register() {
               </Link>
               <Link
                 className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
-                href="/github/redirect"
+                href="/fortytwo/redirect"
               >
                 Sign up with Forty Two
               </Link>
