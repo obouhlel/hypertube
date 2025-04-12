@@ -1,5 +1,4 @@
 import { HttpContext } from '@adonisjs/core/http'
-import ally from '@adonisjs/ally/services/main'
 
 export default class GithubAuthController {
   async redirect({ ally }: HttpContext) {
