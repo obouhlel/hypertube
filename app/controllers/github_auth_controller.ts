@@ -31,7 +31,7 @@ export default class GithubAuthController {
     const githubUser = await github.user()
 
     const user = await User.firstOrCreate(
-      { email: githubUser.email },
+      { email: githubUser.email, username: githubUser.original.login },
       {
         username: githubUser.original.login,
         first_name: githubUser.name?.split(' ')[0] || '',

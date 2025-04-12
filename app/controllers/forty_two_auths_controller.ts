@@ -1,11 +1,15 @@
 import { HttpContext } from '@adonisjs/core/http'
+import hash from '@adonisjs/core/services/hash'
+import string from '@adonisjs/core/helpers/string'
+import User from '#models/user'
+import Token from '#models/token'
 
 export default class FortyTwoAuthController {
   async redirect({ ally }: HttpContext) {
     return ally.use('fortytwo').redirect()
   }
 
-  async callback({ ally, inertia }: HttpContext) {
+  async callback({ ally, inertia, auth }: HttpContext) {
     const fortytwo = ally.use('fortytwo')
 
     if (fortytwo.accessDenied()) {
@@ -22,9 +26,35 @@ export default class FortyTwoAuthController {
       })
     }
 
-    const fortytwoUser = await fortytwo.user()
+    const fortyTwoUser = await fortytwo.user()
 
-    console.log(fortytwoUser)
+    const user = await User.firstOrCreate(
+      {
+        email: fortyTwoUser.email as string,
+        username: fortyTwoUser.original.login,
+      },
+      {
+        username: fortyTwoUser.original.login,
+        first_name: fortyTwoUser.original.first_name,
+        last_name: fortyTwoUser.original.last_name,
+        password: string.generateRandom(64),
+        avatar_url: fortyTwoUser.avatarUrl || '',
+        language: 'en',
+      }
+    )
+
+    const token = await hash.make(fortyTwoUser.token.token)
+    await Token.firstOrCreate(
+      { userId: user.id, type: 'FORTYTWO' },
+      {
+        userId: user.id,
+        type: 'FORTYTWO',
+        token: token,
+        expiresAt: null,
+      }
+    )
+
+    await auth.use('web').login(user)
 
     return inertia.render('home', {
       message:
