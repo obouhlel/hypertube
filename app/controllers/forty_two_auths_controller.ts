@@ -1,7 +1,10 @@
-import type { HttpContext } from '@adonisjs/core/http'
+import { HttpContext } from '@adonisjs/core/http'
+import env from '#start/env'
 
 export default class FortyTwoAuthController {
-  async redirect({}: HttpContext) {}
+  async redirect({ response }: HttpContext) {
+    response.redirect(env.get('FORTYTWO_REDIRECT_URL'))
+  }
 
   async callback({}: HttpContext) {}
 }

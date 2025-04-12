@@ -50,7 +50,7 @@ const FortyTwoAuthController = () => import('#controllers/forty_two_auths_contro
 router
   .group(() => {
     router.get('/redirect', [FortyTwoAuthController, 'redirect']).as('fortytwo.redirect')
-    router.get('/callback', [GithubAuthController, 'callback']).as('fortytwo.callback')
+    router.get('/callback', [FortyTwoAuthController, 'callback']).as('fortytwo.callback')
   })
   .use(middleware.guest())
   .prefix('fortytwo')
