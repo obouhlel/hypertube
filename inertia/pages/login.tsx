@@ -1,24 +1,14 @@
-import { Input, ErrorPopup, Button, SuccessPopup } from '~/components'
-import { useState, useEffect, ChangeEvent, FormEvent } from 'react'
-import { Head, Link, useForm, usePage } from '@inertiajs/react'
+import { Input, ErrorPopup, Button } from '~/components'
+import { useState, ChangeEvent, FormEvent } from 'react'
+import { Head, Link, useForm } from '@inertiajs/react'
 import Layout from '~/layouts/Layout'
 
 export default function Login() {
-  const { message } = usePage().props
-  const { data, setData, post, processing } = useForm({
+  const { data, setData, post, processing, errors } = useForm({
     username: '',
     password: '',
   })
-  const [errors, setErrors] = useState<string[]>([])
   const [popupVisible, setPopupVisible] = useState(false)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (message) {
-      setSuccessMessage(message as string)
-      setPopupVisible(true)
-    }
-  }, [message])
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const key = e.target.name as keyof typeof data
@@ -31,9 +21,7 @@ export default function Login() {
     e.preventDefault()
     post('/auth/login', {
       onSuccess: () => console.log('Login successful'),
-      onError: (errors) => {
-        setErrors(Object.values(errors))
-        setSuccessMessage(null)
+      onError: () => {
         setPopupVisible(true)
       },
     })
@@ -45,12 +33,11 @@ export default function Login() {
       <div className="flex items-center justify-center">
         <div className="bg-gray-100 p-8 rounded shadow-md w-full max-w-md md:max-w-lg">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Login</h1>
-          {popupVisible &&
-            (successMessage ? (
-              <SuccessPopup message={successMessage} onClose={() => setPopupVisible(false)} />
-            ) : (
-              <ErrorPopup errors={errors} onClose={() => setPopupVisible(false)} />
-            ))}
+
+          {popupVisible && (
+            <ErrorPopup errors={Object.values(errors)} onClose={() => setPopupVisible(false)} />
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               id="username"

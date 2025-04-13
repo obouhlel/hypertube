@@ -56,10 +56,7 @@ export default class FortyTwoAuthController {
 
       await auth.use('web').login(user)
 
-      return inertia.render('home', {
-        message:
-          'Your account created, a random password set, if you want change please use forgot password',
-      })
+      return inertia.render('home')
     } catch {
       return inertia.render('register', {
         messages: ['Your email or username is already taken, please register'],

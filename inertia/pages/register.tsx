@@ -1,11 +1,10 @@
-import { useState, ChangeEvent, FormEvent, useEffect } from 'react'
-import { Link, Head, useForm, usePage } from '@inertiajs/react'
+import { useState, ChangeEvent, FormEvent } from 'react'
+import { Link, Head, useForm } from '@inertiajs/react'
 import { Input, ErrorPopup, Button } from '~/components'
 import Layout from '~/layouts/Layout'
 
 export default function Register() {
-  const { messages } = usePage().props
-  const { data, setData, post, processing } = useForm({
+  const { data, setData, post, processing, errors } = useForm({
     username: '',
     first_name: '',
     last_name: '',
@@ -14,14 +13,6 @@ export default function Register() {
   })
   const [popupVisible, setPopupVisible] = useState(false)
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [errors, setErrors] = useState<string[]>([])
-
-  useEffect(() => {
-    if (messages) {
-      setErrors(messages as string[])
-      setPopupVisible(true)
-    }
-  }, [messages])
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const key = e.target.name as keyof typeof data
@@ -41,7 +32,6 @@ export default function Register() {
     post('/auth/register', {
       onSuccess: () => console.log('Registration successful'),
       onError: () => {
-        setErrors(Object.values(errors))
         setPopupVisible(true)
       },
     })

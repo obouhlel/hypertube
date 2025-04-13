@@ -46,7 +46,7 @@ router
   .use(middleware.guest())
   .prefix('github')
 
-const FortyTwoAuthController = () => import('#controllers/forty_two_auths_controller')
+const FortyTwoAuthController = () => import('#controllers/forty_two_auth_controller')
 router
   .group(() => {
     router.get('/redirect', [FortyTwoAuthController, 'redirect']).as('fortytwo.redirect')
