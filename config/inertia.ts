@@ -12,7 +12,7 @@ const inertiaConfig = defineConfig({
    */
   sharedData: {
     user: (ctx) => ctx.auth.use('web').user,
-    csrf: (ctx) => ctx.inertia.share({ csrf_token: ctx.request.csrfToken }),
+    messages: (ctx) => ctx.session.flashMessages,
   },
 
   /**

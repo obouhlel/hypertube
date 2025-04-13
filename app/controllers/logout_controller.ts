@@ -5,8 +5,9 @@ export default class LogoutController {
     return inertia.render('login')
   }
 
-  async store({ auth, response }: HttpContext) {
+  async store({ auth, response, session }: HttpContext) {
     await auth.use('web').logout()
+    session.flash('success', 'Already disconnected.')
     return response.redirect('/')
   }
 }

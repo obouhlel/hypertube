@@ -9,22 +9,24 @@ export default class FortyTwoAuthController {
     return ally.use('fortytwo').redirect()
   }
 
-  async callback({ ally, inertia, auth }: HttpContext) {
+  async callback({ ally, response, session, auth }: HttpContext) {
     const fortytwo = ally.use('fortytwo')
 
     if (fortytwo.accessDenied()) {
-      return inertia.render('login', { errors: 'Access to GitHub was denied.' })
+      session.flash('error', 'Access was denied by 42 authentication.')
+      return response.redirect('/auth/login')
     }
 
     if (fortytwo.stateMisMatch()) {
-      return inertia.render('login', { errors: 'State mismatch detected. Please try again.' })
+      session.flash('error', 'Invalid state during authentication.')
+      return response.redirect('/auth/login')
     }
 
     if (fortytwo.hasError()) {
-      return inertia.render('login', {
-        errors: 'An unknown error occurred during GitHub authentication.',
-      })
+      session.flash('error', 'An error occurred during 42 authentication.')
+      return response.redirect('/auth/login')
     }
+
     try {
       const fortyTwoUser = await fortytwo.user()
 
@@ -55,12 +57,14 @@ export default class FortyTwoAuthController {
       )
 
       await auth.use('web').login(user)
-
-      return inertia.render('home')
+      session.flash(
+        'success',
+        'Your account has been created with a random password. If you need to change it, use the forgot password option.'
+      )
+      return response.redirect('/')
     } catch {
-      return inertia.render('register', {
-        messages: ['Your email or username is already taken, please register'],
-      })
+      session.flash('error', 'The username or email are already taken, please register.')
+      return response.redirect('/auth/register')
     }
   }
 }

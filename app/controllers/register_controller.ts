@@ -7,9 +7,10 @@ export default class RegisterController {
     return inertia.render('register')
   }
 
-  async store({ request, response }: HttpContext) {
+  async store({ request, response, session }: HttpContext) {
     const payload = await request.validateUsing(registerValidator)
     await User.create(payload)
+    session.flash('success', 'Your account has been created. Please login.')
     return response.redirect('/auth/login')
   }
 }

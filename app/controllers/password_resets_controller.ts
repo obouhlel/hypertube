@@ -11,6 +11,7 @@ export default class PasswordResetsController {
     return inertia.render('password/forgot')
   }
 
+  // TODO: Remove inertia and use response to redirect and session to send message
   public async send({ request, inertia }: HttpContext) {
     const { email } = await request.validateUsing(emailValidator)
     const user = await User.findBy('email', email)
@@ -47,6 +48,7 @@ export default class PasswordResetsController {
     return inertia.render('password/reset', { isValid, token })
   }
 
+  // TODO: Remove inertia and use response to redirect and session to send message
   public async store({ request, inertia }: HttpContext) {
     const { token, new_password: newPassword } = await request.validateUsing(newPasswordValidator)
     const user = await Token.getPasswordResetUser(token)
