@@ -11,25 +11,24 @@ interface PageProps {
 
 export default function PasswordResetEmail() {
   const { isValid, token } = usePage<PageProps>().props
-  const { data, setData, post, processing } = useForm({
+  const { data, setData, post, processing, errors, setError, clearErrors } = useForm({
     token: token,
     new_password: '',
   })
   const [popupVisible, setPopupVisible] = useState(false)
   const [confrimNewPassword, setConfirmNewPassword] = useState('')
-  const [errors, setErrors] = useState<string[]>([])
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (data.new_password !== confrimNewPassword) {
-      setErrors(['Passwords do not match'])
+      setError('new_password', 'Passwords do not match')
       setPopupVisible(true)
       return
     }
+
     post('/password-reset', {
       onSuccess: () => console.log('Password reset successful'),
-      onError: (errors: Record<string, string>) => {
-        setErrors(Object.values(errors))
+      onError: () => {
         setPopupVisible(true)
       },
     })
@@ -55,8 +54,16 @@ export default function PasswordResetEmail() {
     <Layout>
       <Head title="Reset Password" />
       <div className="flex items-center justify-center">
+        {popupVisible && (
+          <ErrorPopup
+            errors={Object.values(errors)}
+            onClose={() => {
+              setPopupVisible(false)
+              clearErrors()
+            }}
+          />
+        )}
         <div className="bg-gray-100 p-8 rounded shadow-md w-full max-w-md md:max-w-lg text-black">
-          {popupVisible && <ErrorPopup errors={errors} onClose={() => setPopupVisible(false)} />}
           <h1 className="text-center text-6xl font-bold mb-5">Reset Your Password</h1>
           <p className="text-center text-3xl">Please enter your new password below:</p>
           <form onSubmit={handleSubmit} className="space-y-2">

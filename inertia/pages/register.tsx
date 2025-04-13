@@ -10,7 +10,7 @@ interface PageProps extends InertiaPageProps {
 
 export default function Register() {
   const { messages } = usePage<PageProps>().props
-  const { data, setData, post, processing, errors, clearErrors } = useForm({
+  const { data, setData, post, processing, errors, setError, clearErrors } = useForm({
     username: '',
     first_name: '',
     last_name: '',
@@ -44,6 +44,7 @@ export default function Register() {
 
     if (confirmPassword !== data.password) {
       setPopupVisible(true)
+      setError('password', 'Passwords do not match')
       return
     }
 
