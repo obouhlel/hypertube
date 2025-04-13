@@ -34,8 +34,7 @@ export function Header() {
     <header
       className={`fixed top-0 left-0 w-full h-16 flex items-center justify-between border-b-2 bg-sky-900 text-white`}
     >
-      <div className="text-2xl font-bold ml-3">Hypertube</div>
-      <div className="flex gap-x-2 items-center h-full">
+      <div className="flex gap-x-2 items-center h-full ml-5">
         <Link
           href="/"
           className="h-full text-2xl px-2 border-x font-bold flex items-center bg-sky-800 text-white hover:bg-sky-700 active:bg-sky-700"
