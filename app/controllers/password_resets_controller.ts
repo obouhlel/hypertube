@@ -11,15 +11,13 @@ export default class PasswordResetsController {
     return inertia.render('password/forgot')
   }
 
-  // TODO: Remove inertia and use response to redirect and session to send message
-  public async send({ request, inertia }: HttpContext) {
+  public async send({ request, response, session }: HttpContext) {
     const { email } = await request.validateUsing(emailValidator)
     const user = await User.findBy('email', email)
 
     if (!user) {
-      return inertia.render('password/forgot', {
-        errors: ['No account found with this email address'],
-      })
+      session.flash('error', 'No account found with this email address')
+      return response.redirect('/forgot-password')
     }
 
     const token = await Token.generatePasswordResetToken(user)
@@ -33,10 +31,11 @@ export default class PasswordResetsController {
         .html(`Reset your password by <a href="${env.get('DOMAIN')}${resetLink}">clicking here</a>`)
     })
 
-    return inertia.render('password/forgot', {
-      message:
-        'You will receive a password reset link shortly, after you have 1 hour to reset your password',
-    })
+    session.flash(
+      'success',
+      'You will receive a password reset link shortly, after you have 1 hour to reset your password'
+    )
+    return response.redirect('/forgot-password')
   }
 
   public async reset({ inertia, params }: HttpContext) {
@@ -48,20 +47,17 @@ export default class PasswordResetsController {
     return inertia.render('password/reset', { isValid, token })
   }
 
-  // TODO: Remove inertia and use response to redirect and session to send message
-  public async store({ request, inertia }: HttpContext) {
+  public async store({ request, response, session }: HttpContext) {
     const { token, new_password: newPassword } = await request.validateUsing(newPasswordValidator)
     const user = await Token.getPasswordResetUser(token)
 
     if (!user) {
-      return inertia.render('password/reset', {
-        errors: ['No account found'],
-      })
+      session.flash('error', 'Account not found')
+      return response.redirect('/auth/register')
     }
 
     await user.merge({ password: newPassword }).save()
-    return inertia.render('login', {
-      message: 'Password update, try to connect',
-    })
+    session.flash('success', 'Password updated, try to connect')
+    return response.redirect('/auth/login')
   }
 }
