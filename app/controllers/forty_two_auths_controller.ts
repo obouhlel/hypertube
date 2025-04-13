@@ -25,40 +25,45 @@ export default class FortyTwoAuthController {
         errors: 'An unknown error occurred during GitHub authentication.',
       })
     }
+    try {
+      const fortyTwoUser = await fortytwo.user()
 
-    const fortyTwoUser = await fortytwo.user()
+      const user = await User.firstOrCreate(
+        {
+          email: fortyTwoUser.email as string,
+          username: fortyTwoUser.original.login,
+        },
+        {
+          username: fortyTwoUser.original.login,
+          first_name: fortyTwoUser.original.first_name,
+          last_name: fortyTwoUser.original.last_name,
+          password: string.generateRandom(64),
+          avatar_url: fortyTwoUser.avatarUrl || '',
+          language: 'en',
+        }
+      )
 
-    const user = await User.firstOrCreate(
-      {
-        email: fortyTwoUser.email as string,
-        username: fortyTwoUser.original.login,
-      },
-      {
-        username: fortyTwoUser.original.login,
-        first_name: fortyTwoUser.original.first_name,
-        last_name: fortyTwoUser.original.last_name,
-        password: string.generateRandom(64),
-        avatar_url: fortyTwoUser.avatarUrl || '',
-        language: 'en',
-      }
-    )
+      const token = await hash.make(fortyTwoUser.token.token)
+      await Token.firstOrCreate(
+        { userId: user.id, type: 'FORTYTWO' },
+        {
+          userId: user.id,
+          type: 'FORTYTWO',
+          token: token,
+          expiresAt: null,
+        }
+      )
 
-    const token = await hash.make(fortyTwoUser.token.token)
-    await Token.firstOrCreate(
-      { userId: user.id, type: 'FORTYTWO' },
-      {
-        userId: user.id,
-        type: 'FORTYTWO',
-        token: token,
-        expiresAt: null,
-      }
-    )
+      await auth.use('web').login(user)
 
-    await auth.use('web').login(user)
-
-    return inertia.render('home', {
-      message:
-        'Your account created, a random password set, if you want change please use forgot password',
-    })
+      return inertia.render('home', {
+        message:
+          'Your account created, a random password set, if you want change please use forgot password',
+      })
+    } catch {
+      return inertia.render('register', {
+        messages: ['Your email or username is already taken, please register'],
+      })
+    }
   }
 }

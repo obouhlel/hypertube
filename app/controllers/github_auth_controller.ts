@@ -28,35 +28,41 @@ export default class GithubAuthController {
       })
     }
 
-    const githubUser = await github.user()
+    try {
+      const githubUser = await github.user()
 
-    const user = await User.firstOrCreate(
-      { email: githubUser.email, username: githubUser.original.login },
-      {
-        username: githubUser.original.login,
-        first_name: githubUser.name?.split(' ')[0] || '',
-        last_name: githubUser.name?.split(' ')[1] || '',
-        password: string.generateRandom(64),
-        language: 'en',
-      }
-    )
+      const user = await User.firstOrCreate(
+        { email: githubUser.email, username: githubUser.original.login },
+        {
+          username: githubUser.original.login,
+          first_name: githubUser.name?.split(' ')[0] || '',
+          last_name: githubUser.name?.split(' ')[1] || '',
+          password: string.generateRandom(64),
+          language: 'en',
+        }
+      )
 
-    const token = await hash.make(githubUser.token.token)
-    await Token.firstOrCreate(
-      { userId: user.id, type: 'GITHUB' },
-      {
-        userId: user.id,
-        type: 'GITHUB',
-        token: token,
-        expiresAt: null,
-      }
-    )
+      const token = await hash.make(githubUser.token.token)
+      await Token.firstOrCreate(
+        { userId: user.id, type: 'GITHUB' },
+        {
+          userId: user.id,
+          type: 'GITHUB',
+          token: token,
+          expiresAt: null,
+        }
+      )
 
-    await auth.use('web').login(user)
+      await auth.use('web').login(user)
 
-    return inertia.render('home', {
-      message:
-        'Your account created, a random password set, if you want change please use forgot password',
-    })
+      return inertia.render('home', {
+        message:
+          'Your account created, a random password set, if you want change please use forgot password',
+      })
+    } catch {
+      return inertia.render('register', {
+        messages: ['Your email or username is already taken, please register'],
+      })
+    }
   }
 }
