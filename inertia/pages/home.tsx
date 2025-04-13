@@ -33,6 +33,8 @@ export default function Home() {
   useEffect(() => {
     if (user) {
       setFullName(`${user.firstName} ${user.lastName}`)
+    } else {
+      setFullName('')
     }
   }, [user])
 
