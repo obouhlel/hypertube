@@ -36,7 +36,6 @@ export default class FortyTwoAuthController {
           username: fortyTwoUser.original.login,
         },
         {
-          username: fortyTwoUser.original.login,
           first_name: fortyTwoUser.original.first_name,
           last_name: fortyTwoUser.original.last_name,
           password: string.generateRandom(64),

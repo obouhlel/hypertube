@@ -132,9 +132,21 @@ export default function Register() {
               </Button>
               <a
                 className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
+                href="/google/redirect"
+              >
+                Sign up with Google
+              </a>
+              <a
+                className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
                 href="/github/redirect"
               >
                 Sign up with Github
+              </a>
+              <a
+                className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
+                href="/discord/redirect"
+              >
+                Sign up with Discord
               </a>
               <a
                 className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"

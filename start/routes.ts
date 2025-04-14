@@ -37,6 +37,15 @@ router
   })
   .prefix('auth')
 
+const GoogleAuthController = () => import('#controllers/google_auth_controller')
+router
+  .group(() => {
+    router.get('/redirect', [GoogleAuthController, 'redirect']).as('google.redirect')
+    router.get('/callback', [GoogleAuthController, 'callback']).as('google.callback')
+  })
+  .use(middleware.guest())
+  .prefix('google')
+
 const GithubAuthController = () => import('#controllers/github_auth_controller')
 router
   .group(() => {
@@ -45,6 +54,15 @@ router
   })
   .use(middleware.guest())
   .prefix('github')
+
+const DiscordAuthController = () => import('#controllers/discord_auth_controller')
+router
+  .group(() => {
+    router.get('/redirect', [DiscordAuthController, 'redirect']).as('discord.redirect')
+    router.get('/callback', [DiscordAuthController, 'callback']).as('discord.callback')
+  })
+  .use(middleware.guest())
+  .prefix('discord')
 
 const FortyTwoAuthController = () => import('#controllers/forty_two_auth_controller')
 router

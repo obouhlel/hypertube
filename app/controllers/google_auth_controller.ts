@@ -1,55 +1,56 @@
-import { HttpContext } from '@adonisjs/core/http'
+import type { HttpContext } from '@adonisjs/core/http'
+import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import string from '@adonisjs/core/helpers/string'
 import User from '#models/user'
 import Token from '#models/token'
 
-export default class GithubAuthController {
+export default class GoogleAuthController {
   async redirect({ ally }: HttpContext) {
-    return ally.use('github').redirect((request) => {
-      request.scopes(['user'])
-    })
+    return ally.use('google').redirect()
   }
 
   async callback({ ally, response, session, auth }: HttpContext) {
-    const github = ally.use('github')
+    const google = ally.use('google')
 
-    if (github.accessDenied()) {
-      session.flash('error', 'Access was denied to your GitHub account.')
+    if (google.accessDenied()) {
+      session.flash('error', 'Access was denied to your Google account.')
       return response.redirect('/auth/login')
     }
 
-    if (github.stateMisMatch()) {
+    if (google.stateMisMatch()) {
       session.flash('error', 'Invalid state parameter. Try the authentication again.')
       return response.redirect('/auth/login')
     }
 
-    if (github.hasError()) {
-      session.flash('error', 'An error occurred during GitHub authentication.')
+    if (google.hasError()) {
+      session.flash('error', 'An error occurred during Google authentication.')
       return response.redirect('/auth/login')
     }
 
     try {
-      const githubUser = await github.user()
+      const googleUser = await google.user()
 
       const user = await User.firstOrCreate(
-        { email: githubUser.email, username: githubUser.original.login },
+        { email: googleUser.email, username: googleUser.original.name },
         {
-          first_name: githubUser.name?.split(' ')[0] || '',
-          last_name: githubUser.name?.split(' ')[1] || '',
+          first_name: googleUser.original.given_name,
+          last_name: googleUser.original.family_name,
           password: string.generateRandom(64),
           language: 'en',
+          avatar_url: googleUser.original.picture,
         }
       )
-
-      const token = await hash.make(githubUser.token.token)
+      const token = await hash.make(googleUser.token.token)
       await Token.firstOrCreate(
-        { userId: user.id, type: 'GITHUB' },
+        { userId: user.id, type: 'GOOGLE' },
         {
           userId: user.id,
-          type: 'GITHUB',
+          type: 'GOOGLE',
           token: token,
-          expiresAt: null,
+          expiresAt: googleUser.token.expiresAt
+            ? DateTime.fromJSDate(googleUser.token.expiresAt)
+            : undefined,
         }
       )
 

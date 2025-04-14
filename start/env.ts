@@ -51,9 +51,15 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring ally package
   |----------------------------------------------------------
   */
+  GOOGLE_CLIENT_ID: Env.schema.string(),
+  GOOGLE_CLIENT_SECRET: Env.schema.string(),
+  GOOGLE_CALLBACK_URL: Env.schema.string(),
   GITHUB_CLIENT_ID: Env.schema.string(),
   GITHUB_CLIENT_SECRET: Env.schema.string(),
   GITHUB_CALLBACK_URL: Env.schema.string(),
+  DISCORD_CLIENT_ID: Env.schema.string(),
+  DISCORD_CLIENT_SECRET: Env.schema.string(),
+  DISCORD_CALLBACK_URL: Env.schema.string(),
   FORTYTWO_CLIENT_ID: Env.schema.string(),
   FORTYTWO_CLIENT_SECRET: Env.schema.string(),
   FORTYTWO_CALLBACK_URL: Env.schema.string(),

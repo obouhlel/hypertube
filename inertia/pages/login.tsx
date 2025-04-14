@@ -100,9 +100,21 @@ export default function Login() {
               </Button>
               <a
                 className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
+                href="/google/redirect"
+              >
+                Login with Google
+              </a>
+              <a
+                className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
                 href="/github/redirect"
               >
                 Login with Github
+              </a>
+              <a
+                className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
+                href="/discord/redirect"
+              >
+                Login with Discord
               </a>
               <a
                 className="w-full bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition"
