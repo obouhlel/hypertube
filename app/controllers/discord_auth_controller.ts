@@ -15,17 +15,17 @@ export default class DiscordAuthController {
 
     if (discord.accessDenied()) {
       session.flash('error', 'Access was denied to your Discord account.')
-      return response.redirect('/auth/login')
+      return response.redirect('/auth/register')
     }
 
     if (discord.stateMisMatch()) {
       session.flash('error', 'Invalid state parameter. Try the authentication again.')
-      return response.redirect('/auth/login')
+      return response.redirect('/auth/register')
     }
 
     if (discord.hasError()) {
       session.flash('error', 'An error occurred during Discord authentication.')
-      return response.redirect('/auth/login')
+      return response.redirect('/auth/register')
     }
 
     try {

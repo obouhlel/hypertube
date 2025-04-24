@@ -15,17 +15,17 @@ export default class GoogleAuthController {
 
     if (google.accessDenied()) {
       session.flash('error', 'Access was denied to your Google account.')
-      return response.redirect('/auth/login')
+      return response.redirect('/auth/register')
     }
 
     if (google.stateMisMatch()) {
       session.flash('error', 'Invalid state parameter. Try the authentication again.')
-      return response.redirect('/auth/login')
+      return response.redirect('/auth/register')
     }
 
     if (google.hasError()) {
       session.flash('error', 'An error occurred during Google authentication.')
-      return response.redirect('/auth/login')
+      return response.redirect('/auth/register')
     }
 
     try {

@@ -14,17 +14,17 @@ export default class FortyTwoAuthController {
 
     if (fortytwo.accessDenied()) {
       session.flash('error', 'Access was denied by 42 authentication.')
-      return response.redirect('/auth/login')
+      return response.redirect('/auth/register')
     }
 
     if (fortytwo.stateMisMatch()) {
       session.flash('error', 'Invalid state during authentication.')
-      return response.redirect('/auth/login')
+      return response.redirect('/auth/register')
     }
 
     if (fortytwo.hasError()) {
       session.flash('error', 'An error occurred during 42 authentication.')
-      return response.redirect('/auth/login')
+      return response.redirect('/auth/register')
     }
 
     try {

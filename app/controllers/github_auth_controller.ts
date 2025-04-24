@@ -16,17 +16,17 @@ export default class GithubAuthController {
 
     if (github.accessDenied()) {
       session.flash('error', 'Access was denied to your GitHub account.')
-      return response.redirect('/auth/login')
+      return response.redirect('/auth/register')
     }
 
     if (github.stateMisMatch()) {
       session.flash('error', 'Invalid state parameter. Try the authentication again.')
-      return response.redirect('/auth/login')
+      return response.redirect('/auth/register')
     }
 
     if (github.hasError()) {
       session.flash('error', 'An error occurred during GitHub authentication.')
-      return response.redirect('/auth/login')
+      return response.redirect('/auth/register')
     }
 
     try {
