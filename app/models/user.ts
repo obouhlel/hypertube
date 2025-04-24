@@ -5,6 +5,8 @@ import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import hash from '@adonisjs/core/services/hash'
 import Token from './token.js'
+import mail from '@adonisjs/mail/services/main'
+import VerifyEmailNotification from '#mails/verify_email'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['username'],
@@ -31,6 +33,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare password: string
 
   @column()
+  declare is_email_verified: boolean
+
+  @column()
   declare avatar_url: string
 
   @column()
@@ -40,11 +45,19 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare tokens: HasMany<typeof Token>
 
   @hasMany(() => Token, { onQuery: (query) => query.where('type', 'PASSWORD_RESET') })
-  declare passwordResetTokens: HasMany<typeof Token>
+  declare password_reset_tokens: HasMany<typeof Token>
+
+  @hasMany(() => Token, { onQuery: (query) => query.where('type', 'VERIFY_EMAIL') })
+  declare verify_email_token: HasMany<typeof Token>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+
+  public async sendVerifyEmailToken() {
+    const token = await Token.generateVerifyEmailToken(this)
+    await mail.sendLater(new VerifyEmailNotification(this, token))
+  }
 }

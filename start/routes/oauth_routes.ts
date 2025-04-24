@@ -1,5 +1,5 @@
 import router from '@adonisjs/core/services/router'
-import { middleware } from '../kernel.js'
+import { middleware } from '#start/kernel'
 
 const GoogleAuthController = () => import('#controllers/oauth/google_auth_controller')
 const GithubAuthController = () => import('#controllers/oauth/github_auth_controller')

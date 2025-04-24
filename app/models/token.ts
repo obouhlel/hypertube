@@ -5,6 +5,9 @@ import hash from '@adonisjs/core/services/hash'
 import string from '@adonisjs/core/helpers/string'
 import User from './user.js'
 
+type TokenType = 'PASSWORD_RESET' | 'VERIFY_EMAIL' | 'DISCORD' | 'FORTYTWO' | 'GITHUB' | 'GOOGLE'
+type RelationName = 'password_reset_tokens' | 'verify_email_token'
+
 export default class Token extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
@@ -30,12 +33,25 @@ export default class Token extends BaseModel {
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 
+  public static async generateVerifyEmailToken(user: User) {
+    const plainToken = string.generateRandom(64)
+
+    await Token.expireTokens(user, 'verify_email_token')
+    const token = await hash.make(plainToken)
+    await user.related('password_reset_tokens').create({
+      type: 'VERIFY_EMAIL',
+      token,
+      expiresAt: DateTime.now().plus({ hours: 24 }),
+    })
+    return plainToken
+  }
+
   public static async generatePasswordResetToken(user: User) {
     const plainToken = string.generateRandom(64)
 
-    await Token.expirePasswordResetToken(user)
+    await Token.expireTokens(user, 'password_reset_tokens')
     const token = await hash.make(plainToken)
-    await user.related('passwordResetTokens').create({
+    await user.related('password_reset_tokens').create({
       type: 'PASSWORD_RESET',
       token,
       expiresAt: DateTime.now().plus({ hours: 1 }),
@@ -43,22 +59,18 @@ export default class Token extends BaseModel {
     return plainToken
   }
 
-  public static async expirePasswordResetToken(user: User) {
-    const token = await user
-      .related('passwordResetTokens')
-      .query()
-      .where('type', 'PASSWORD_RESET')
-      .first()
+  public static async expireTokens(user: User, relation: RelationName) {
+    const token = await user.related(relation).query().where('type', 'PASSWORD_RESET').first()
     if (token) {
       token.expiresAt = DateTime.now()
       await token.save()
     }
   }
 
-  public static async getPasswordResetUser(token: string) {
+  public static async getTokenUser(token: string, type: TokenType) {
     const tokens = await Token.query()
       .preload('user')
-      .where('type', 'PASSWORD_RESET')
+      .where('type', type)
       .where('expiresAt', '>', DateTime.now().toSQL())
       .orderBy('createdAt', 'desc')
 
@@ -72,8 +84,9 @@ export default class Token extends BaseModel {
     return null
   }
 
-  public static async verify(token: string) {
+  public static async verify(token: string, type: TokenType) {
     const tokens = await Token.query()
+      .where('type', type)
       .where('expiresAt', '>', DateTime.now().toSQL())
       .orderBy('createdAt', 'desc')
 

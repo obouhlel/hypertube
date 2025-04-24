@@ -58,13 +58,13 @@ export default class PasswordResetsController {
     if (!token) {
       return inertia.render('password/reset')
     }
-    const isValid = await Token.verify(token)
+    const isValid = await Token.verify(token, 'PASSWORD_RESET')
     return inertia.render('password/reset', { isValid, token })
   }
 
   public async store({ request, response, session }: HttpContext) {
     const { token, new_password: newPassword } = await request.validateUsing(newPasswordValidator)
-    const user = await Token.getPasswordResetUser(token)
+    const user = await Token.getTokenUser(token, 'PASSWORD_RESET')
 
     if (!user) {
       session.flash('error', 'Account not found')
