@@ -8,9 +8,14 @@ export default class RegisterController {
   }
 
   async store({ request, response, session }: HttpContext) {
-    const payload = await request.validateUsing(registerValidator)
-    await User.create(payload)
-    session.flash('success', 'Your account has been created. Please login.')
-    return response.redirect('/auth/login')
+    try {
+      const payload = await request.validateUsing(registerValidator)
+      await User.create(payload)
+      session.flash('success', 'Your account has been created. Please login.')
+      return response.redirect('/auth/login')
+    } catch {
+      session.flash('error', 'Failed to create account. Please try again.')
+      return response.redirect().back()
+    }
   }
 }

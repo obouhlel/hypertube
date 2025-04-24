@@ -1,33 +1,12 @@
+import type { PageProps } from '~/types/page_props'
 import { Link, usePage, router } from '@inertiajs/react'
-import { PageProps as InertiaPageProps } from '@inertiajs/core'
-
-interface User {
-  id: number
-  name: string
-  email: string
-  token: string
-}
-
-interface PageProps extends InertiaPageProps {
-  csrf_token: string
-  user?: User
-}
 
 export function Header() {
-  const { csrf_token, user } = usePage<PageProps>().props
+  const { user } = usePage<PageProps>().props
 
   const handleLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-
-    router.post(
-      '/auth/logout',
-      {
-        _csrf: csrf_token,
-      },
-      {
-        onSuccess: () => console.log('Logout success'),
-      }
-    )
+    router.post('/auth/logout')
   }
 
   return (

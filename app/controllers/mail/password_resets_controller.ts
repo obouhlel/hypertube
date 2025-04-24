@@ -24,7 +24,7 @@ export default class PasswordResetsController {
     const resetLink = router.makeUrl('password.reset', [token])
 
     await mail.sendLater((message) => {
-      message.from('noreply@obouhlel.xyz').to(user.email).subject('Password Reset on Hypertube')
+      message.from('no-reply@obouhlel.xyz').to(user.email).subject('Password Reset on Hypertube')
         .html(`
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e4e4e4; border-radius: 5px;">
         <div style="text-align: center; margin-bottom: 20px;">

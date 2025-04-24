@@ -1,12 +1,8 @@
-import { PageProps as InertiaPageProps } from '@inertiajs/core'
+import type { PageProps } from '~/types/page_props'
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react'
 import { Input, ErrorPopup, SuccessPopup, Button } from '~/components'
 import { Head, Link, useForm, usePage } from '@inertiajs/react'
-import Layout from '~/layouts/Layout'
-
-interface PageProps extends InertiaPageProps {
-  messages?: Record<string, string>
-}
+import Layout from '~/layouts/layout'
 
 export default function Login() {
   const { messages } = usePage<PageProps>().props

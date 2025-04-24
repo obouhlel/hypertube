@@ -2,7 +2,7 @@ import { PageProps as InertiaPageProps } from '@inertiajs/core'
 import { Head, Link, useForm, usePage } from '@inertiajs/react'
 import { Button, Input, ErrorPopup, SuccessPopup } from '~/components'
 import { useState, FormEvent, useEffect } from 'react'
-import Layout from '~/layouts/Layout'
+import Layout from '~/layouts/layout'
 
 interface PageProps extends InertiaPageProps {
   messages?: Record<string, string>

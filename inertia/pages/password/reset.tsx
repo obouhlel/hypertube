@@ -1,7 +1,7 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react'
 import { Button, Input, ErrorPopup } from '~/components'
 import { useState, FormEvent } from 'react'
-import Layout from '~/layouts/Layout'
+import Layout from '~/layouts/layout'
 
 interface PageProps {
   isValid: boolean

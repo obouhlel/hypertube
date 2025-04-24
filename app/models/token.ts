@@ -6,7 +6,7 @@ import string from '@adonisjs/core/helpers/string'
 import User from './user.js'
 
 type TokenType = 'PASSWORD_RESET' | 'VERIFY_EMAIL' | 'DISCORD' | 'FORTYTWO' | 'GITHUB' | 'GOOGLE'
-type RelationName = 'password_reset_tokens' | 'verify_email_token'
+type RelationName = 'passwordResetTokens' | 'verifyEmailToken'
 
 export default class Token extends BaseModel {
   @column({ isPrimary: true })
@@ -36,9 +36,9 @@ export default class Token extends BaseModel {
   public static async generateVerifyEmailToken(user: User) {
     const plainToken = string.generateRandom(64)
 
-    await Token.expireTokens(user, 'verify_email_token')
+    await Token.expireTokens(user, 'verifyEmailToken')
     const token = await hash.make(plainToken)
-    await user.related('password_reset_tokens').create({
+    await user.related('passwordResetTokens').create({
       type: 'VERIFY_EMAIL',
       token,
       expiresAt: DateTime.now().plus({ hours: 24 }),
@@ -49,9 +49,9 @@ export default class Token extends BaseModel {
   public static async generatePasswordResetToken(user: User) {
     const plainToken = string.generateRandom(64)
 
-    await Token.expireTokens(user, 'password_reset_tokens')
+    await Token.expireTokens(user, 'passwordResetTokens')
     const token = await hash.make(plainToken)
-    await user.related('password_reset_tokens').create({
+    await user.related('passwordResetTokens').create({
       type: 'PASSWORD_RESET',
       token,
       expiresAt: DateTime.now().plus({ hours: 1 }),

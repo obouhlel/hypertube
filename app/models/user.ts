@@ -33,7 +33,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare password: string
 
   @column()
-  declare is_email_verified: boolean
+  declare isEmailVerified: boolean
 
   @column()
   declare avatar_url: string
@@ -45,10 +45,10 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare tokens: HasMany<typeof Token>
 
   @hasMany(() => Token, { onQuery: (query) => query.where('type', 'PASSWORD_RESET') })
-  declare password_reset_tokens: HasMany<typeof Token>
+  declare passwordResetTokens: HasMany<typeof Token>
 
   @hasMany(() => Token, { onQuery: (query) => query.where('type', 'VERIFY_EMAIL') })
-  declare verify_email_token: HasMany<typeof Token>
+  declare verifyEmailToken: HasMany<typeof Token>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

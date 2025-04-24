@@ -1,21 +1,8 @@
-import { PageProps as InertiaPageProps } from '@inertiajs/core'
+import type { PageProps } from '~/types/page_props'
 import { useEffect, useState } from 'react'
 import { Head, usePage } from '@inertiajs/react'
 import { SuccessPopup } from '~/components'
-import Layout from '~/layouts/Layout'
-
-interface User {
-  id: number
-  username: string
-  firstName: string
-  lastName: string
-  email: string
-}
-
-interface PageProps extends InertiaPageProps {
-  user?: User
-  messages?: Record<string, string>
-}
+import Layout from '~/layouts/layout'
 
 export default function Home() {
   const { user, messages } = usePage<PageProps>().props

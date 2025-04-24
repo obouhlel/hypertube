@@ -13,6 +13,7 @@ import { middleware } from './kernel.js'
 import './routes/auth_routes.js'
 import './routes/oauth_routes.js'
 import './routes/password_routes.js'
+import './routes/verify_account.js'
 
 router
   .get('/', (ctx: HttpContext) => ctx.inertia.render('home'))
