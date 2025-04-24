@@ -6,7 +6,7 @@ import Layout from '~/layouts/layout'
 
 export default function Home() {
   const { user, messages } = usePage<PageProps>().props
-  const [fullName, setFullName] = useState<string>('')
+  const [username, setUsername] = useState<string>('')
   const [popupVisible, setPopupVisible] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
 
@@ -19,9 +19,9 @@ export default function Home() {
 
   useEffect(() => {
     if (user) {
-      setFullName(`${user.firstName} ${user.lastName}`)
+      setUsername(user.username)
     } else {
-      setFullName('')
+      setUsername('')
     }
   }, [user])
 
@@ -39,7 +39,7 @@ export default function Home() {
       )}
       <div>
         <h1 className="text-center text-6xl font-bold mb-5">
-          Welcome {fullName ? fullName : 'to Hypertube'}
+          Welcome {username ? username : 'to Hypertube'}
         </h1>
         <p className="text-center text-3xl">Your BitTorrent-based streaming application</p>
       </div>
