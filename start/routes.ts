@@ -19,3 +19,13 @@ router
   .get('/', (ctx: HttpContext) => ctx.inertia.render('home'))
   .use(middleware.silentAuth())
   .as('home')
+
+const UserProfilController = () => import('#controllers/user_profil_controller')
+router
+  .group(() => {
+    router.get('/me', (ctx: HttpContext) => ctx.inertia.render('profil')).as('profil.me')
+    router.post('/update', [UserProfilController, 'update']).as('profil.update')
+    router.get('/:id', [UserProfilController, 'show']).as('profil.show')
+  })
+  .prefix('profil')
+  .use(middleware.auth())

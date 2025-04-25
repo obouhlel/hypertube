@@ -2,7 +2,6 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
 
 const PasswordResetsController = () => import('#controllers/mail/password_resets_controller')
-
 router
   .group(() => {
     router.get('/forgot-password', [PasswordResetsController, 'forgot']).as('forgot.show')
