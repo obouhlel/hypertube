@@ -4,7 +4,7 @@ import User from '#models/user'
 
 export default class RegisterController {
   async show({ inertia }: HttpContext) {
-    return inertia.render('register')
+    return inertia.render('auth/register')
   }
 
   async store({ request, response, session }: HttpContext) {

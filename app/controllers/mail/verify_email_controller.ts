@@ -18,6 +18,11 @@ export default class VerifyEmailController {
       await auth.authenticate()
       const isMatch: boolean = user?.id === auth.user?.id
 
+      if (!auth.user) {
+        session.put('isVerifingMail', true)
+        return response.redirect('/auth/login')
+      }
+
       if (!user || !isMatch) {
         session.flash('token', 'Your token is invalid or expired')
         return response.redirect('/')
