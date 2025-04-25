@@ -40,13 +40,14 @@ function AuthHeader({ user }: AuthHeaderProps) {
         </Link>
       </div>
       <div className="flex items-center h-full mr-5">
-        <Settings className="cursor-pointer transition-transform hover:rotate-90 duration-300" onClick={handleMenu} />
+        <Settings
+          className="cursor-pointer transition-transform hover:rotate-90 duration-300"
+          onClick={handleMenu}
+        />
         {menu && (
           <div className="absolute top-[60px] right-5 flex-col space-y-5 w-[200px] h-auto px-5 py-3 bg-sky-100 rounded text-sky-950">
             <div className="flex justify-between items-center w-full font-bold text-2xl">
-              <h1 className="truncate max-w-[80%] text-lg">
-                {user.username}
-              </h1>
+              <h1 className="truncate max-w-[80%] text-lg">{user.username}</h1>
               <Power className="cursor-pointer ml-2 flex-shrink-0" onClick={handleLogout} />
             </div>
             <img
