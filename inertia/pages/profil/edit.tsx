@@ -45,7 +45,7 @@ export default function EditProfil() {
 
   return (
     <Layout>
-      <Head title="Register" />
+      <Head title="Edit profil" />
       <div className="flex items-center justify-center">
         {popupVisible && messages?.success && (
           <SuccessPopup message={messages.success} onClose={() => setPopupVisible(false)} />

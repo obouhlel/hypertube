@@ -3,6 +3,7 @@ import { Head, usePage } from '@inertiajs/react'
 import Layout from '~/layouts/layout'
 import { useEffect, useState } from 'react'
 import { Loading } from '~/components'
+import { capitalize } from '~/utils/capitalize'
 
 export default function Me() {
   const { user } = usePage<PagePropsUser>().props
@@ -14,7 +15,7 @@ export default function Me() {
 
   return (
     <Layout>
-      <Head title="Profil" />
+      <Head title={capitalize(user.username)} />
       {avatar ? (
         <div className="profile">
           <img src={avatar} alt={`${user.username}'s avatar`} loading="lazy" className="avatar" />

@@ -8,8 +8,8 @@ export default class RegisterController {
   }
 
   async store({ request, response, session }: HttpContext) {
+    const payload = await request.validateUsing(registerValidator)
     try {
-      const payload = await request.validateUsing(registerValidator)
       const avatarUrl = `https://ui-avatars.com/api/?name=${payload.first_name}+${payload.last_name}?background=random?bold=true`
       await User.create({ avatar_url: avatarUrl, ...payload })
       session.flash('success', 'Your account has been created. Please login.')
