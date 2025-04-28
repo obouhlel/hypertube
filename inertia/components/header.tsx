@@ -53,6 +53,7 @@ function AuthHeader({ user }: AuthHeaderProps) {
             <img
               className="rounded-full border border-sky-900 mx-auto"
               src={user.avatarUrl}
+              loading="lazy"
               width={100}
               height={100}
             />

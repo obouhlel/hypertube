@@ -36,9 +36,9 @@ export default class DiscordAuthController {
         {
           last_name: 'None',
           first_name: 'None',
+          avatar_url: discordUser.avatarUrl,
           password: string.generateRandom(64),
           language: 'en',
-          avatar_url: discordUser.avatarUrl,
         }
       )
 

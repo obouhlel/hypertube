@@ -36,9 +36,9 @@ export default class GoogleAuthController {
         {
           first_name: googleUser.original.given_name,
           last_name: googleUser.original.family_name,
+          avatar_url: googleUser.original.picture,
           password: string.generateRandom(64),
           language: 'en',
-          avatar_url: googleUser.original.picture,
         }
       )
       const token = await hash.make(googleUser.token.token)

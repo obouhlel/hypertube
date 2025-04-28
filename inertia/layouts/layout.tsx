@@ -13,7 +13,6 @@ export default function Layout({ children }: LayoutProps) {
   const [emailConfirmation, setEmailConfirmation] = useState<boolean>(false)
 
   useEffect(() => {
-    console.log(user?.isEmailVerified)
     if (user?.isEmailVerified === false) {
       setEmailConfirmation(true)
     } else {

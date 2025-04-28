@@ -1,24 +1,22 @@
-import type { PageProps } from '~/types/page_props'
+import type { PagePropsUser } from '~/types/page_props'
 import { Head, Link, useForm, usePage } from '@inertiajs/react'
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react'
 import { Input, ErrorPopup, SuccessPopup, Button } from '~/components'
 import Layout from '~/layouts/layout'
 
 export default function EditProfil() {
-  const { user, messages } = usePage<PageProps>().props
-  const { data, setData, post, processing, errors, clearErrors } = useForm({
-    avatar: user!.avatarUrl,
-    username: user!.username,
-    first_name: user!.firstName,
-    last_name: user!.lastName,
-    email: user!.email,
-    language: user!.language,
-  })
-  const [popupVisible, setPopupVisible] = useState(false)
+  const { user, messages } = usePage<PagePropsUser>().props
+  const [popupVisible, setPopupVisible] = useState<boolean>(false)
   const [errorServer, setErrorServer] = useState<string | null>(null)
+  const { data, setData, post, processing, errors, clearErrors } = useForm({
+    username: user.username,
+    first_name: user.firstName,
+    last_name: user.lastName,
+    email: user.email,
+    language: user.language,
+  })
 
   useEffect(() => {
-    console.log(messages)
     if (messages?.success) {
       setPopupVisible(true)
     }
@@ -46,22 +44,6 @@ export default function EditProfil() {
     })
   }
 
-  useEffect(() => {
-    console.log(data)
-  }, [data])
-
-  if (!user) {
-    return (
-      <Layout>
-        <Head title="Access Denied" />
-        <div className="access-denied">
-          <h1>Access Denied</h1>
-          <p>You need to be logged in to view this profile.</p>
-        </div>
-      </Layout>
-    )
-  }
-
   return (
     <Layout>
       <Head title="Register" />
@@ -84,32 +66,6 @@ export default function EditProfil() {
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Edit profil</h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-800 mb-2">Avatar</h2>
-              <div className="flex items-center space-x-4">
-                <div className="relative w-24 h-24 overflow-hidden rounded-full">
-                  <img src={user!.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-                </div>
-                <div className="flex flex-col">
-                  <input
-                    type="file"
-                    id="avatar"
-                    name="avatar"
-                    className="hidden"
-                    accept="image/*"
-                  />
-                  <label
-                    htmlFor="avatar"
-                    className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-600 transition mb-2"
-                  >
-                    Choose File
-                  </label>
-                  <Button type="submit" disabled={processing || !data.avatar}>
-                    Upload Avatar
-                  </Button>
-                </div>
-              </div>
-            </div>
             <Input
               id="first_name"
               name="first_name"

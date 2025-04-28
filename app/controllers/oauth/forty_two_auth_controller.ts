@@ -38,8 +38,8 @@ export default class FortyTwoAuthController {
         {
           first_name: fortyTwoUser.original.first_name,
           last_name: fortyTwoUser.original.last_name,
+          avatar_url: fortyTwoUser.avatarUrl as NonNullable<string>,
           password: string.generateRandom(64),
-          avatar_url: fortyTwoUser.avatarUrl || '',
           language: 'en',
         }
       )

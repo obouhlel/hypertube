@@ -37,6 +37,7 @@ export default class GithubAuthController {
         {
           first_name: githubUser.name?.split(' ')[0] || '',
           last_name: githubUser.name?.split(' ')[1] || '',
+          avatar_url: githubUser.avatarUrl,
           password: string.generateRandom(64),
           language: 'en',
         }

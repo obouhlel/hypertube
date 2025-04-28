@@ -1,33 +1,30 @@
-import type { PageProps } from '~/types/page_props'
-import type { User } from '~/types/user'
+import type { PagePropsUser } from '~/types/page_props'
 import { Head, usePage } from '@inertiajs/react'
 import Layout from '~/layouts/layout'
+import { useEffect, useState } from 'react'
+import { Loading } from '~/components'
 
 export default function Me() {
-  const props = usePage<PageProps>().props
-  const user: User | undefined = props.user
+  const { user } = usePage<PagePropsUser>().props
+  const [avatar, setAvatar] = useState<string | null>(null)
 
-  if (!user) {
-    return (
-      <Layout>
-        <Head title="Access Denied" />
-        <div className="access-denied">
-          <h1>Access Denied</h1>
-          <p>You need to be logged in to view this profile.</p>
-        </div>
-      </Layout>
-    )
-  }
+  useEffect(() => {
+    setAvatar(user.avatarUrl)
+  }, [user])
 
   return (
     <Layout>
       <Head title="Profil" />
-      <div className="profile">
-        <img src={user.avatarUrl} alt={`${user.username}'s avatar`} className="avatar" />
-        <h1>{user.username}</h1>
-        <p>Email: {user.email}</p>
-        <p>Language: {user.language}</p>
-      </div>
+      {avatar ? (
+        <div className="profile">
+          <img src={avatar} alt={`${user.username}'s avatar`} loading="lazy" className="avatar" />
+          <h1>{user.username}</h1>
+          <p>Email: {user.email}</p>
+          <p>Language: {user.language}</p>
+        </div>
+      ) : (
+        <Loading />
+      )}
     </Layout>
   )
 }
