@@ -45,7 +45,6 @@ export default function Register() {
     }
 
     post('/auth/register', {
-      onSuccess: () => console.log('Registration successful'),
       onError: () => {
         setPopupVisible(true)
       },

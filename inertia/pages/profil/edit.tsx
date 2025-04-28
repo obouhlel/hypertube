@@ -37,7 +37,6 @@ export default function EditProfil() {
     e.preventDefault()
 
     post('/profil/update', {
-      onSuccess: () => console.log('Edit profil successful'),
       onError: () => {
         setPopupVisible(true)
       },

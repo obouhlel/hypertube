@@ -5,8 +5,7 @@ import { Settings, Power } from 'lucide-react'
 import React, { useState } from 'react'
 
 export function Header() {
-  const props = usePage<PageProps>().props
-  const user: User | undefined = props.user
+  const { user } = usePage<PageProps>().props
 
   return user ? <AuthHeader user={user} /> : <GuestHeader />
 }

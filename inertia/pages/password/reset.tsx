@@ -27,7 +27,6 @@ export default function PasswordResetEmail() {
     }
 
     post('/password-reset', {
-      onSuccess: () => console.log('Password reset successful'),
       onError: () => {
         setPopupVisible(true)
       },

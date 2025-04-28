@@ -33,7 +33,6 @@ export default function Login() {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     post('/auth/login', {
-      onSuccess: () => console.log('Login successful'),
       onError: () => {
         setPopupVisible(true)
       },
