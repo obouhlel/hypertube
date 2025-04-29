@@ -14,7 +14,7 @@ export default class AvatarController {
     try {
       const user = auth.getUserOrFail()
       const fileName = `${user.id}-${user.username}.${avatar.extname}`
-      const publicPath = app.publicPath('uploads')
+      const publicPath = app.publicPath('uploads/avatars')
       const oldAvatarUrl: string = user.avatar_url
 
       await avatar.move(publicPath, {
@@ -22,12 +22,12 @@ export default class AvatarController {
         overwrite: true,
       })
 
-      user.avatar_url = `/uploads/${fileName}`
+      user.avatar_url = `/uploads/avatars/${fileName}`
       await user.save()
       session.flash('success', 'Your avatar has been successfully updated')
 
       if (!oldAvatarUrl.startsWith('https')) {
-        const oldAvatarPath = join(publicPath, oldAvatarUrl.replace('/uploads/', ''))
+        const oldAvatarPath = join(publicPath, oldAvatarUrl.replace('/uploads/avatars/', ''))
         await unlink(oldAvatarPath)
       }
 
