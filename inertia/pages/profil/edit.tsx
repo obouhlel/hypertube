@@ -119,9 +119,9 @@ export default function EditProfil() {
               <Link href="/profil/avatar" className="text-blue-500 hover:underline">
                 Change your avatar
               </Link>
-              <Link href="/profil/password" className="text-blue-500 hover:underline">
+              {/* <Link href="/profil/password" className="text-blue-500 hover:underline">
                 Change password
-              </Link>
+              </Link> */}
             </div>
           </form>
         </div>
