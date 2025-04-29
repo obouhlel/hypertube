@@ -3,7 +3,7 @@ import { editProfilValidator } from '#validators/edit_profil'
 
 export default class UserProfilController {
   async show({ inertia }: HttpContext) {
-    return inertia.render('profil/me')
+    return inertia.render('profil/edit')
   }
 
   async update({ request, session, response, auth }: HttpContext) {

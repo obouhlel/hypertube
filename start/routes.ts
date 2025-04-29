@@ -21,11 +21,17 @@ router
   .as('home')
 
 const UserProfilController = () => import('#controllers/profil/user_profil_controller')
+const AvatarController = () => import('#controllers/profil/avatar_controller')
 router
   .group(() => {
     router.get('/me', (ctx: HttpContext) => ctx.inertia.render('profil/me')).as('profil.me')
-    router.get('/edit', (ctx: HttpContext) => ctx.inertia.render('profil/edit')).as('profil.edit')
+
+    router.get('/edit', [UserProfilController, 'show']).as('profil.edit')
     router.post('/update', [UserProfilController, 'update']).as('profil.update')
+
+    router.get('/avatar', [AvatarController, 'show']).as('profil.avatar.show')
+    router.post('/avatar', [AvatarController, 'store']).as('profil.avatar.store')
+
     router.get('/:id', [UserProfilController, 'show']).as('profil.show')
   })
   .prefix('profil')

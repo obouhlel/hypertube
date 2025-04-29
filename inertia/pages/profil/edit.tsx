@@ -116,6 +116,9 @@ export default function EditProfil() {
               <Button type="submit" disabled={processing}>
                 Update
               </Button>
+              <Link href="/profil/avatar" className="text-blue-500 hover:underline">
+                Change your avatar
+              </Link>
               <Link href="/update-password" className="text-blue-500 hover:underline">
                 Change password
               </Link>
