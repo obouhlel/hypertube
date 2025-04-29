@@ -28,7 +28,7 @@ function AuthHeader({ user }: AuthHeaderProps) {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full h-16 flex items-center justify-between border-b-2 bg-sky-900 text-white`}
+      className={`fixed top-0 left-0 w-full h-16 flex items-center justify-between border-b-2 bg-sky-900 text-white z-50`}
     >
       <div className="flex gap-x-2 items-center h-full ml-5">
         <Link
@@ -50,11 +50,11 @@ function AuthHeader({ user }: AuthHeaderProps) {
               <Power className="cursor-pointer ml-2 flex-shrink-0" onClick={handleLogout} />
             </div>
             <img
-              className="rounded-full border border-sky-900 mx-auto"
               src={user.avatarUrl}
               loading="lazy"
               width={100}
               height={100}
+              className="rounded-full border-2 border-sky-900 mx-auto aspect-square"
             />
             <div className="flex flex-col space-y-2 w-full">
               <Link
@@ -80,7 +80,7 @@ function AuthHeader({ user }: AuthHeaderProps) {
 function GuestHeader() {
   return (
     <header
-      className={`fixed top-0 left-0 w-full h-16 flex items-center justify-between border-b-2 bg-sky-900 text-white`}
+      className={`fixed top-0 left-0 w-full h-16 flex items-center justify-between border-b-2 bg-sky-900 text-white z-50`}
     >
       <div className="flex gap-x-2 items-center h-full ml-5">
         <Link

@@ -74,7 +74,9 @@ export default function Avatar() {
                   src={avatarUrl}
                   alt="Current avatar"
                   loading="lazy"
-                  className="w-24 h-24 rounded-full mb-5 object-cover"
+                  width={100}
+                  height={100}
+                  className="rounded-full border-2 border-sky-900 mb-5 object-cover aspect-square"
                 />
                 <input
                   type="file"
