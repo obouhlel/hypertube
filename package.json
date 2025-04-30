@@ -69,6 +69,7 @@
     "@tailwindcss/vite": "4.1.4",
     "@vinejs/vine": "3.0.1",
     "ally-forty-two-service": "file:forty-two",
+    "axios": "^1.9.0",
     "edge.js": "6.2.1",
     "lucide-react": "0.503.0",
     "luxon": "3.6.1",
