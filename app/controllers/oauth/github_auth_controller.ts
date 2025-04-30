@@ -1,4 +1,5 @@
 import { HttpContext } from '@adonisjs/core/http'
+import { generateUsername } from '../../utils/generate_username.js'
 import hash from '@adonisjs/core/services/hash'
 import string from '@adonisjs/core/helpers/string'
 import User from '#models/user'
@@ -31,10 +32,12 @@ export default class GithubAuthController {
 
     try {
       const githubUser = await github.user()
+      const username = await generateUsername(githubUser.original.login as string)
 
       const user = await User.firstOrCreate(
-        { email: githubUser.email, username: githubUser.original.login },
+        { email: githubUser.email },
         {
+          username: username,
           first_name: githubUser.name?.split(' ')[0] || '',
           last_name: githubUser.name?.split(' ')[1] || '',
           avatar_url: githubUser.avatarUrl,
@@ -55,11 +58,6 @@ export default class GithubAuthController {
       )
 
       await auth.use('web').login(user)
-
-      session.flash(
-        'success',
-        'Your account has been created with a random password. If you need to change it, use the forgot password option.'
-      )
       return response.redirect('/')
     } catch {
       session.flash('error', 'The username or email are already taken, please register.')

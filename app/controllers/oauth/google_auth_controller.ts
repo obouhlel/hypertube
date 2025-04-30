@@ -1,4 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import { generateUsername } from '../../utils/generate_username.js'
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import string from '@adonisjs/core/helpers/string'
@@ -30,10 +31,12 @@ export default class GoogleAuthController {
 
     try {
       const googleUser = await google.user()
+      const username = await generateUsername(googleUser.nickName)
 
       const user = await User.firstOrCreate(
-        { email: googleUser.email, username: googleUser.original.name },
+        { email: googleUser.email },
         {
+          username: username,
           first_name: googleUser.original.given_name,
           last_name: googleUser.original.family_name,
           avatar_url: googleUser.original.picture,
@@ -55,15 +58,10 @@ export default class GoogleAuthController {
       )
 
       await auth.use('web').login(user)
-
-      session.flash(
-        'success',
-        'Your account has been created with a random password. If you need to change it, use the forgot password option.'
-      )
       return response.redirect('/')
     } catch {
-      session.flash('error', 'The username or email are already taken, please register.')
-      return response.redirect('/auth/register')
+      session.flash('error', 'The email are already taken, please try a forgot password.')
+      return response.redirect('/forgot-password')
     }
   }
 }

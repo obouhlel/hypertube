@@ -4,6 +4,7 @@ import hash from '@adonisjs/core/services/hash'
 import string from '@adonisjs/core/helpers/string'
 import User from '#models/user'
 import Token from '#models/token'
+import { generateUsername } from '../../utils/generate_username.js'
 
 export default class DiscordAuthController {
   async redirect({ ally }: HttpContext) {
@@ -30,12 +31,14 @@ export default class DiscordAuthController {
 
     try {
       const discordUser = await discord.user()
+      const username = await generateUsername(discordUser.nickName)
 
       const user = await User.firstOrCreate(
-        { email: discordUser.email, username: discordUser.nickName },
+        { email: discordUser.email },
         {
-          last_name: 'None',
-          first_name: 'None',
+          username: username,
+          last_name: '',
+          first_name: '',
           avatar_url: discordUser.avatarUrl,
           password: string.generateRandom(64),
           language: 'en',
@@ -56,16 +59,10 @@ export default class DiscordAuthController {
       )
 
       await auth.use('web').login(user)
-
-      session.flash(
-        'success',
-        'Your account has been created with a random password. If you need to change it, use the forgot password option. Update your profil for your first name, and last name.'
-      )
       return response.redirect('/')
-    } catch (e) {
-      console.log(e)
-      session.flash('error', 'The username or email are already taken, please register.')
-      return response.redirect('/auth/register')
+    } catch {
+      session.flash('error', 'The email are already taken, please try a forgot password.')
+      return response.redirect('/forgot-password')
     }
   }
 }
