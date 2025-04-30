@@ -10,3 +10,9 @@ export interface PagePropsUser extends InertiaPageProps {
   user: NonNullable<User>
   messages?: Record<string, string>
 }
+
+export interface PagePropsOtherUser extends InertiaPageProps {
+  user: NonNullable<User>
+  otherUser: NonNullable<User>
+  messages?: Record<string, string>
+}
