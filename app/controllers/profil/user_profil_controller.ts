@@ -7,10 +7,15 @@ export default class UserProfilController {
   }
 
   async update({ request, session, response, auth }: HttpContext) {
-    const payload = await request.validateUsing(editProfilValidator(auth.getUserOrFail()))
-
+    let user = null
     try {
-      const user = auth.getUserOrFail()
+      user = auth.getUserOrFail()
+    } catch {
+      session.flash('error', 'User not authenticated')
+      return response.redirect('/')
+    }
+    const payload = await request.validateUsing(editProfilValidator(user))
+    try {
       user.merge(payload)
       user.save()
       session.flash('success', 'Your information was updated')
