@@ -20,3 +20,5 @@ router
   .get('/', (ctx: HttpContext) => ctx.inertia.render('home'))
   .use(middleware.silentAuth())
   .as('home')
+
+router.get('*', (ctx: HttpContext) => ctx.inertia.render('errors/not_found')).as('not-found')
