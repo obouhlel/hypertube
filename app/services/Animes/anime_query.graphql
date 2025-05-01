@@ -1,0 +1,33 @@
+query ($page: Int, $perPage: Int, $sort: [MediaSort]) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      total
+      currentPage
+      lastPage
+      hasNextPage
+      perPage
+    }
+    media(type: ANIME, sort: $sort, isAdult: false, averageScore_greater: 75) {
+      id
+      title {
+        romaji
+        english
+        native
+        userPreferred
+      }
+      coverImage {
+        large
+      }
+      description
+      genres
+      episodes
+      startDate {
+        year
+      }
+      endDate {
+        year
+      }
+      averageScore
+    }
+  }
+}

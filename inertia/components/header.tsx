@@ -37,6 +37,18 @@ function AuthHeader({ user }: AuthHeaderProps) {
         >
           Home
         </Link>
+        <Link
+          href="/movies/list"
+          className="h-full text-2xl px-2 border-x-2 font-bold flex items-center bg-sky-800 text-white hover:bg-sky-700 active:bg-sky-700"
+        >
+          Movies
+        </Link>
+        <Link
+          href="/animes/list"
+          className="h-full text-2xl px-2 border-x-2 font-bold flex items-center bg-sky-800 text-white hover:bg-sky-700 active:bg-sky-700"
+        >
+          Animes
+        </Link>
       </div>
       <div className="flex items-center h-full mr-5">
         <Settings
@@ -91,7 +103,7 @@ function GuestHeader() {
         </Link>
       </div>
       <div className="flex items-center space-x-4 relative mr-5 h-full">
-        <div className="flex gap-x-5 items-center h-full">
+        <div className="flex gap-x-2 items-center h-full">
           <Link
             href="/auth/login"
             className="h-full text-2xl px-2 border-x-2 font-bold flex items-center bg-sky-800 text-white hover:bg-sky-700 active:bg-sky-700"
