@@ -1,19 +1,46 @@
 import Animes, { AnimeSort } from './anime.type.js'
 import axios from 'axios'
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
-import * as path from 'node:path'
 
 export class AnimeService {
   private anilistURL: string = 'https://graphql.anilist.co'
   // private nyaaURL: string = 'https://nyaaapi.onrender.com/api'
-  private query: string
-
-  constructor() {
-    const filename = fileURLToPath(import.meta.url)
-    const dirname = path.dirname(filename)
-    this.query = readFileSync(path.join(dirname, 'anime_query.graphql'), 'utf-8')
+  private query: string = `
+  query ($page: Int, $perPage: Int, $sort: [MediaSort]) {
+    Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        total
+        currentPage
+        lastPage
+        hasNextPage
+        perPage
+      }
+      media(type: ANIME, sort: $sort, isAdult: false, averageScore_greater: 75) {
+        id
+        title {
+          romaji
+          english
+          native
+          userPreferred
+        }
+        coverImage {
+          large
+        }
+        description
+        genres
+        episodes
+        startDate {
+          year
+        }
+        endDate {
+          year
+        }
+        averageScore
+      }
+    }
   }
+  `
+
+  constructor() {}
 
   async fetchAnimeInfo(
     page: number = 1,
