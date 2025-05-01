@@ -1,0 +1,38 @@
+query ($page: Int, $perPage: Int, $sort: [MediaSort]) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      total
+      currentPage
+      lastPage
+      hasNextPage
+      perPage
+    }
+    media(
+      type: ANIME
+      sort: $sort
+      source_in: [ORIGINAL, MANGA, LIGHT_NOVEL, VISUAL_NOVEL, GAME]
+      isAdult: false
+      popularity_not: null
+      averageScore_not: null
+      status_not: null
+    ) {
+      id
+      title {
+        romaji
+      }
+      coverImage {
+        large
+      }
+      description
+      genres
+      episodes
+      startDate {
+        year
+      }
+      endDate {
+        year
+      }
+      averageScore
+    }
+  }
+}
