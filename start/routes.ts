@@ -21,4 +21,21 @@ router
   .use(middleware.silentAuth())
   .as('home')
 
+const MoviesController = () => import('#controllers/movies_controller')
+router
+  .group(() => {
+    router.get('list', [MoviesController, 'show'])
+  })
+  .prefix('movies')
+  .use(middleware.auth())
+
+const AnimeController = () => import('#controllers/animes_controller')
+router
+  .group(() => {
+    router.get('list', [AnimeController, 'show'])
+  })
+  .prefix('animes')
+  .use(middleware.auth())
+
+// Toujours laisser tout en bas
 router.get('*', (ctx: HttpContext) => ctx.inertia.render('errors/not_found')).as('not-found')

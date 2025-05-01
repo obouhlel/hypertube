@@ -2,9 +2,6 @@ export interface Anime {
   id: number
   title: {
     romaji: string
-    english?: string
-    native?: string
-    userPreferred?: string
   }
   coverImage: {
     large: string

@@ -7,18 +7,13 @@ query ($page: Int, $perPage: Int, $sort: [MediaSort]) {
       hasNextPage
       perPage
     }
-    media(
-      type: ANIME
-      sort: $sort
-      source_in: [ORIGINAL, MANGA, LIGHT_NOVEL, VISUAL_NOVEL, GAME]
-      isAdult: false
-      popularity_not: null
-      averageScore_not: null
-      status_not: null
-    ) {
+    media(type: ANIME, sort: $sort, isAdult: false, averageScore_greater: 75) {
       id
       title {
         romaji
+        english
+        native
+        userPreferred
       }
       coverImage {
         large
