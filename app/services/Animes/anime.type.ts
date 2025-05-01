@@ -29,7 +29,7 @@ export interface PageInfo {
   perPage: number
 }
 
-export default interface AnimeQueryResult {
+export default interface Animes {
   pageInfo: PageInfo
   media: Anime[]
 }

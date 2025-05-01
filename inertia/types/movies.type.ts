@@ -2,7 +2,7 @@ export default interface Movies {
   movie_count: number
   page_number: number
   limit: number
-  movies: Movie[]
+  medias: Movie[]
 }
 
 export interface Movie {

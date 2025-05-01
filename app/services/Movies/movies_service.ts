@@ -22,7 +22,7 @@ export class MoviesService {
 
       if (response.data && response.data.status === 'ok') {
         return {
-          movies: response.data.data.movies,
+          medias: response.data.data.movies,
           movie_count: response.data.data.movie_count,
           page_number: response.data.data.page_number,
           limit: response.data.data.limit,

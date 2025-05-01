@@ -1,4 +1,4 @@
-import AnimeQueryResult, { AnimeSort } from './anime.type.js'
+import Animes, { AnimeSort } from './anime.type.js'
 import axios from 'axios'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -19,7 +19,7 @@ export class AnimeService {
     page: number = 1,
     limit: number = 20,
     sort: AnimeSort[] = ['TITLE_ROMAJI']
-  ): Promise<AnimeQueryResult> {
+  ): Promise<Animes> {
     try {
       const variables = {
         page,

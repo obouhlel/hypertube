@@ -2,6 +2,9 @@ export interface Anime {
   id: number
   title: {
     romaji: string
+    english?: string
+    native?: string
+    userPreferred?: string
   }
   coverImage: {
     large: string
@@ -26,7 +29,7 @@ export interface PageInfo {
   perPage: number
 }
 
-export default interface AnimeQueryResult {
+export default interface Animes {
   pageInfo: PageInfo
   media: Anime[]
 }
