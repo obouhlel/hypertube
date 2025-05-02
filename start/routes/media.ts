@@ -5,6 +5,7 @@ const MoviesController = () => import('#controllers/movies_controller')
 router
   .group(() => {
     router.get('list', [MoviesController, 'show'])
+    router.post('pagination', [MoviesController, 'fetchPagination'])
   })
   .prefix('movies')
   .use(middleware.auth())

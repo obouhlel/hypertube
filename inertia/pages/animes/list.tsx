@@ -3,7 +3,7 @@ import Layout from '~/layouts/layout'
 import { Head } from '@inertiajs/react'
 import { useEffect, useState } from 'react'
 import { Card } from '~/components'
-import { fetchAnime } from './fetch'
+import { fetchAnimes } from './fetch'
 
 interface PageProps {
   csrf: string
@@ -17,7 +17,7 @@ export default function AnimesList({ csrf }: PageProps) {
 
   useEffect(() => {
     if (page === 1) {
-      fetchAnime(page, csrf, setLoading, setAnimes, setHasNextPage, setPage, hasNextPage)
+      fetchAnimes(page, csrf, setLoading, setAnimes, setHasNextPage, setPage, hasNextPage)
     }
 
     const handleScroll = () => {
@@ -27,7 +27,7 @@ export default function AnimesList({ csrf }: PageProps) {
         !loading
       ) {
         setLoading(true)
-        fetchAnime(page, csrf, setLoading, setAnimes, setHasNextPage, setPage, hasNextPage)
+        fetchAnimes(page, csrf, setLoading, setAnimes, setHasNextPage, setPage, hasNextPage)
       }
     }
 

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Animes, { Anime } from '~/types/anime.type'
 
-export const fetchAnime = async (
+export const fetchAnimes = async (
   page: number,
   csrf: string,
   setLoading: (isLoading: boolean) => void,
@@ -38,7 +38,7 @@ export const fetchAnime = async (
   } catch (error) {
     console.error('Error fetching animes:', error)
     setTimeout(
-      () => fetchAnime(page, csrf, setLoading, setAnimes, setHasNextPage, setPage, hasNextPage),
+      () => fetchAnimes(page, csrf, setLoading, setAnimes, setHasNextPage, setPage, hasNextPage),
       5000
     )
   }
