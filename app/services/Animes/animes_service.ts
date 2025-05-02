@@ -1,4 +1,4 @@
-import Animes, { AnimeSort } from './anime.type.js'
+import Animes, { Anime, AnimeSort } from './anime.type.js'
 import axios from 'axios'
 
 export class AnimeService {
@@ -14,7 +14,7 @@ export class AnimeService {
         hasNextPage
         perPage
       }
-      media(type: ANIME, sort: $sort, isAdult: false, averageScore_greater: 75) {
+      media(type: ANIME, sort: $sort, isAdult: false, averageScore_greater: 70) {
         id
         title {
           romaji
@@ -42,10 +42,14 @@ export class AnimeService {
 
   constructor() {}
 
+  private delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
+
   async fetchAnimeInfo(
     page: number = 1,
     limit: number = 20,
-    sort: AnimeSort[] = ['TITLE_ROMAJI']
+    sort: AnimeSort[] = ['TITLE_ENGLISH']
   ): Promise<Animes> {
     try {
       const variables = {
@@ -53,15 +57,24 @@ export class AnimeService {
         perPage: limit,
         sort,
       }
-      const response = await axios.post(this.anilistURL, {
+
+      const { data, status } = await axios.post<{
+        data: { Page: Animes }
+        errors?: Array<{ message: string }>
+      }>(this.anilistURL, {
         query: this.query,
         variables,
       })
 
-      if (response.data && response.data.data && response.data.data.Page) {
-        return response.data.data.Page
-      } else if (response.data && response.data.errors) {
-        console.error('GraphQL errors:', response.data.errors)
+      if (data.data && data.data.Page) {
+        await this.delay(2500)
+        const animes = data.data.Page
+        animes.media.map((anime: Anime) => {
+          anime.averageScore = anime.averageScore / 10
+        })
+        return animes
+      } else if (status !== 200 || data.errors) {
+        console.error('GraphQL errors:', data.errors)
         throw new Error('Failed to fetch animes: GraphQL errors')
       } else {
         throw new Error('Failed to fetch animes: Invalid response structure')

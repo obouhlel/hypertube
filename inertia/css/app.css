@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './laoding.css';
 
 @theme {
   --spacing: 3px;

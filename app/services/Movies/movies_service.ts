@@ -17,6 +17,7 @@ export class MoviesService {
           page,
           limit,
           sort_by: sort,
+          order_by: 'asc',
         },
       })
 

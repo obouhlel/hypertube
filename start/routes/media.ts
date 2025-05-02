@@ -5,14 +5,16 @@ const MoviesController = () => import('#controllers/movies_controller')
 router
   .group(() => {
     router.get('list', [MoviesController, 'show'])
+    router.post('pagination', [MoviesController, 'fetchPagination'])
   })
   .prefix('movies')
   .use(middleware.auth())
 
-const AnimeController = () => import('#controllers/animes_controller')
+const AnimesController = () => import('#controllers/animes_controller')
 router
   .group(() => {
-    router.get('list', [AnimeController, 'show'])
+    router.get('list', [AnimesController, 'show'])
+    router.post('pagination', [AnimesController, 'fetchPagination'])
   })
   .prefix('animes')
   .use(middleware.auth())
