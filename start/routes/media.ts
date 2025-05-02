@@ -13,6 +13,7 @@ const AnimesController = () => import('#controllers/animes_controller')
 router
   .group(() => {
     router.get('list', [AnimesController, 'show'])
+    router.post('pagination', [AnimesController, 'fetchPagination'])
   })
   .prefix('animes')
   .use(middleware.auth())
