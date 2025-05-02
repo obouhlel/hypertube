@@ -9,10 +9,10 @@ router
   .prefix('movies')
   .use(middleware.auth())
 
-const AnimeController = () => import('#controllers/animes_controller')
+const AnimesController = () => import('#controllers/animes_controller')
 router
   .group(() => {
-    router.get('list', [AnimeController, 'show'])
+    router.get('list', [AnimesController, 'show'])
   })
   .prefix('animes')
   .use(middleware.auth())

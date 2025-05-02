@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { AnimeService } from '#services/Animes/animes_service'
 
-export default class MoviesController {
+export default class AnimesController {
   async show({ inertia }: HttpContext) {
     const service = new AnimeService()
     try {
