@@ -1,5 +1,5 @@
 import axios from 'axios'
-import Animes from '~/types/anime.type'
+import Animes, { Anime } from '~/types/anime.type'
 
 export const fetchAnime = async (
   page: number,
@@ -26,7 +26,7 @@ export const fetchAnime = async (
     if (status === 200 && data.media) {
       setAnimes((prevAnimes) => {
         const animeIds = new Set(prevAnimes.map((anime) => anime.id))
-        const newAnimes = data.media.filter((anime) => !animeIds.has(anime.id))
+        const newAnimes = data.media.filter((anime: Anime) => !animeIds.has(anime.id))
         return [...prevAnimes, ...newAnimes]
       })
       setHasNextPage(data.pageInfo.hasNextPage)
@@ -37,5 +37,9 @@ export const fetchAnime = async (
     }
   } catch (error) {
     console.error('Error fetching animes:', error)
+    setTimeout(
+      () => fetchAnime(page, csrf, setLoading, setAnimes, setHasNextPage, setPage, hasNextPage),
+      5000
+    )
   }
 }

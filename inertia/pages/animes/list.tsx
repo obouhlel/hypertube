@@ -50,8 +50,13 @@ export default function AnimesList({ csrf }: PageProps) {
         ))}
         {loading && (
           <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 flex justify-center items-center w-full my-4">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
-            <span className="ml-3 text-gray-50">Loading more animes...</span>
+            <div className="loadingspinner">
+              <div id="square1"></div>
+              <div id="square2"></div>
+              <div id="square3"></div>
+              <div id="square4"></div>
+              <div id="square5"></div>
+            </div>
           </div>
         )}
       </div>
