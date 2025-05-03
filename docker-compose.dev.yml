@@ -1,0 +1,18 @@
+
+services:
+  web:
+    build:
+      context: .
+    container_name: hypertube_web_dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - ./public/uploads:/app/build/public/uploads
+    env_file:
+      - .env
+    networks:
+      - hypertube_net
+    depends_on:
+      - db
+    command: npm run dev
