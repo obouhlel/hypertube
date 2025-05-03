@@ -12,7 +12,7 @@ RUN npm install --production
 COPY . .
 
 #Partie volume des fichiers upload sur le dossier public
-RUN mkdir -p public/uploads && chown -R ous:ous public/uploads
+RUN mkdir -p /app/build/public/uploads && chown -R ous:ous /app/build/public/uploads
 
 #Droit owner
 RUN chown -R ous:ous /app
