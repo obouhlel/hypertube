@@ -20,6 +20,22 @@ services:
     networks:
       - hypertube_net
 
+
+  web:
+    build:
+      context: .
+    container_name: hypertube_web
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - hypertube_net
+    volumes:
+      - uploads-data:/app/build/public/uploads
+    depends_on:
+      - db
+    command: npm start
+
 networks:
   hypertube_net:
     driver: bridge
