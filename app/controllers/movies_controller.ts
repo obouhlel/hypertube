@@ -1,6 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { MoviesService } from '#services/Movies/movies_service'
-import { paginationValidator } from '#validators/pagination'
+import { mediasValidator } from '#validators/medias'
 
 export default class MoviesController {
   async show({ inertia }: HttpContext) {
@@ -8,7 +8,7 @@ export default class MoviesController {
   }
 
   async fetchPagination({ request, response }: HttpContext) {
-    const { page, limit } = await request.validateUsing(paginationValidator)
+    const { page, limit } = await request.validateUsing(mediasValidator)
     const services = new MoviesService()
 
     try {

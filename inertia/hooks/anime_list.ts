@@ -1,16 +1,25 @@
 import { useEffect, useState } from 'react'
 import { fetchAnimes } from '~/pages/animes/fetch'
-import type { Anime } from '~/types/anime.type'
+import type { Anime, AnimeSettings } from '~/types/anime.type'
+import type { Sort } from '~/types/sort.type'
 
 export const useAnimeList = (csrf: string) => {
   const [animes, setAnimes] = useState<Anime[]>([])
-  const [hasNextPage, setHasNextPage] = useState<boolean>(true)
-  const [page, setPage] = useState<number>(1)
   const [loading, setLoading] = useState<boolean>(true)
+  const [settings, setSettings] = useState<AnimeSettings>({
+    page: 1,
+    limit: 20,
+    search: null,
+    genres: null,
+    sort: 'asc' as Sort,
+    sortOrder: ['TITLE_ENGLISH'],
+    hasNextPage: true,
+  })
 
   useEffect(() => {
+    const { page, hasNextPage } = settings
     if (page === 1) {
-      fetchAnimes(page, csrf, setLoading, setAnimes, setHasNextPage, setPage, hasNextPage)
+      fetchAnimes(csrf, setLoading, setAnimes, settings, setSettings)
     }
 
     const handleScroll = () => {
@@ -20,13 +29,13 @@ export const useAnimeList = (csrf: string) => {
         !loading
       ) {
         setLoading(true)
-        fetchAnimes(page, csrf, setLoading, setAnimes, setHasNextPage, setPage, hasNextPage)
+        fetchAnimes(csrf, setLoading, setAnimes, settings, setSettings)
       }
     }
 
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [page, hasNextPage, loading, csrf])
+  }, [csrf, loading, settings])
 
   return { animes, loading }
 }

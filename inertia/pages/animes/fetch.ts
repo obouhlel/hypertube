@@ -1,19 +1,19 @@
+import React from 'react'
 import axios from 'axios'
-import type { Anime, Animes } from '~/types/anime.type'
+import type { Anime, Animes, AnimeSettings } from '~/types/anime.type'
 
 export const fetchAnimes = async (
-  page: number,
   csrf: string,
   setLoading: (isLoading: boolean) => void,
   setAnimes: React.Dispatch<React.SetStateAction<Anime[]>>,
-  setHasNextPage: (hasNextPage: boolean) => void,
-  setPage: React.Dispatch<React.SetStateAction<number>>,
-  hasNextPage: boolean
+  settings: AnimeSettings,
+  setSettings: React.Dispatch<React.SetStateAction<AnimeSettings>>
 ) => {
   try {
+    const { page, limit, search, genres, sort, sortOrder } = settings
     const { data } = await axios.post<Animes>(
       '/animes/pagination',
-      { page, limit: 20 },
+      { page, limit, search, genres, sort, sortOrder },
       { headers: { 'X-CSRF-TOKEN': csrf } }
     )
 
@@ -23,8 +23,11 @@ export const fetchAnimes = async (
         const newAnimes = data.media.filter((anime) => !animeIds.has(anime.id))
         return [...prevAnimes, ...newAnimes]
       })
-      setHasNextPage(data.pageInfo.hasNextPage)
-      if (hasNextPage) setPage((prevPage) => prevPage + 1)
+      setSettings((prevSettings) => ({
+        ...prevSettings,
+        hasNextPage: data.pageInfo.hasNextPage,
+        page: data.pageInfo.hasNextPage ? prevSettings.page + 1 : prevSettings.page,
+      }))
     }
   } catch (error) {
     console.error('Error fetching animes:', error)
