@@ -1,39 +1,14 @@
-import type { Anime } from '~/types/anime.type'
 import Layout from '~/layouts/layout'
 import { Head } from '@inertiajs/react'
-import { useEffect, useState } from 'react'
 import { Card, Loading } from '~/components'
-import { fetchAnimes } from './fetch'
+import { useAnimeList } from '~/hooks/anime_list'
 
 interface PageProps {
   csrf: string
 }
 
 export default function AnimesList({ csrf }: PageProps) {
-  const [animes, setAnimes] = useState<Anime[]>([])
-  const [hasNextPage, setHasNextPage] = useState<boolean>(true)
-  const [page, setPage] = useState<number>(1)
-  const [loading, setLoading] = useState<boolean>(true)
-
-  useEffect(() => {
-    if (page === 1) {
-      fetchAnimes(page, csrf, setLoading, setAnimes, setHasNextPage, setPage, hasNextPage)
-    }
-
-    const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
-        hasNextPage &&
-        !loading
-      ) {
-        setLoading(true)
-        fetchAnimes(page, csrf, setLoading, setAnimes, setHasNextPage, setPage, hasNextPage)
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [page, hasNextPage, loading])
+  const { animes, loading } = useAnimeList(csrf)
 
   return (
     <Layout>
