@@ -8,6 +8,9 @@ export interface Anime {
   }
   coverImage: {
     large: string
+    medium: string
+    extraLarge: string
+    color: string
   }
   description: string
   genres: string[]
