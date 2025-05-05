@@ -16,7 +16,7 @@ export class AnimeService {
         hasNextPage
         perPage
       }
-      media(type: ANIME, search: $search, sort: $sort, isAdult: false, averageScore_greater: 70) {
+      media(type: ANIME, search: $search, sort: $sort, isAdult: false, averageScore_greater: 40) {
         id
         title {
           romaji

@@ -42,7 +42,7 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       )}
       <Header />
-      <main className="mt-[80px] min-h-[calc(100vh-110px)] w-screen">{children}</main>
+      <main className="mt-[80px] min-h-[calc(100vh-110px)] w-screen mx-5">{children}</main>
       <Footer />
     </>
   )
