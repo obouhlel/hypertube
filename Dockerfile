@@ -1,25 +1,18 @@
+
 FROM node:22-alpine
 
-#Crée un user ous
-RUN addgroup ous && adduser -S -G ous ous
+USER node
 
-WORKDIR /app
+WORKDIR /home/node/app
 
-COPY package*.json ./
+COPY --chown=node:node package*.json ./ 
 
-RUN npm install --production
+RUN npm ci --omit=dev
 
-COPY . .
+COPY --chown=node:node . .
 
-#Partie volume des fichiers upload sur le dossier public
-RUN mkdir -p /app/build/public/uploads && chown -R ous:ous /app/build/public/uploads
+RUN mkdir -p build/public/uploads
 
-#Droit owner
-RUN chown -R ous:ous /app
-
-#user non root
-USER ous
+CMD ["sh", "-c", "cd build && node bin/server.js"]
 
 EXPOSE 3000
-
-CMD ["npm", "start"]
