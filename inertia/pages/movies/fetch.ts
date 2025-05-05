@@ -5,7 +5,7 @@ export const fetchMovies = async (
   page: number,
   csrf: string,
   setLoading: (isLoading: boolean) => void,
-  setAnimes: (value: React.SetStateAction<any[]>) => void,
+  setMovies: (value: React.SetStateAction<any[]>) => void,
   setPage: (value: React.SetStateAction<number>) => void
 ) => {
   try {
@@ -22,15 +22,15 @@ export const fetchMovies = async (
       }
     )
     if (status === 200 && data.medias) {
-      setAnimes((prevAnimes) => {
-        const animeIds = new Set(prevAnimes.map((anime) => anime.id))
-        const newAnimes = data.medias.filter((anime: Movie) => !animeIds.has(anime.id))
-        return [...prevAnimes, ...newAnimes]
+      setMovies((prevMovies) => {
+        const movieIds = new Set(prevMovies.map((movie) => movie.id))
+        const newMovies = data.medias.filter((movie: Movie) => !movieIds.has(movie.id))
+        return [...prevMovies, ...newMovies]
       })
       setPage((prevPage) => prevPage + 1)
       setLoading(false)
     }
   } catch {
-    setTimeout(() => fetchMovies(page, csrf, setLoading, setAnimes, setPage), 5000)
+    setTimeout(() => fetchMovies(page, csrf, setLoading, setMovies, setPage), 5000)
   }
 }

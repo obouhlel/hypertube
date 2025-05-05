@@ -38,7 +38,7 @@ export function Search({ setSearch }: SearchProps) {
         />
         <button
           onClick={handleSearchClick}
-          className="bg-blue-500 text-white font-bold px-5 py-2 rounded hover:bg-blue-600 transition"
+          className="bg-blue-500 text-white font-bold px-5 py-4 rounded hover:bg-blue-600 transition h-full"
         >
           Search
         </button>

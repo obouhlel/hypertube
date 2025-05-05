@@ -27,7 +27,9 @@ export default function AnimesList({ csrf }: PageProps) {
             />
           ))}
           {!loading && animes.length === 0 && (
-            <div className="flex justify-center items-center text-center">No anime found</div>
+            <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 flex justify-center items-center text-center w-full">
+              No anime found
+            </div>
           )}
           {loading && (
             <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 flex justify-center items-center w-full my-4">
