@@ -42,9 +42,7 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       )}
       <Header />
-      <main className="mt-[48px] min-h-[calc(100vh-80px)] w-screen flex justify-center items-center">
-        {children}
-      </main>
+      <main className="mt-[80px] min-h-[calc(100vh-110px)] w-screen">{children}</main>
       <Footer />
     </>
   )
