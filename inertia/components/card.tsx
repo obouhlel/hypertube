@@ -8,7 +8,7 @@ interface CardProps {
 export function Card({ title, year, rating, image }: CardProps) {
   return (
     <div
-      className="flex items-end justify-end w-full min-h-[400px] bg-cover bg-center bg-black rounded border-2 border-sky-100 mb-2"
+      className="flex items-end justify-end max-w-[300px] min-h-[400px] bg-cover bg-center bg-black rounded border-2 border-sky-100 mb-2"
       style={{
         backgroundImage: `url(${image})`,
         backgroundSize: '300px auto',
