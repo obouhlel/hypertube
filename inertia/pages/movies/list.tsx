@@ -2,7 +2,7 @@ import type { Movie } from '~/types/movies.type'
 import Layout from '~/layouts/layout'
 import { Head } from '@inertiajs/react'
 import { useEffect, useState } from 'react'
-import { Card } from '~/components'
+import { Card, Loading } from '~/components'
 import { fetchMovies } from './fetch'
 
 interface PageProps {
@@ -45,13 +45,7 @@ export default function AnimesList({ csrf }: PageProps) {
         ))}
         {loading && (
           <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 flex justify-center items-center w-full my-4">
-            <div className="loadingspinner">
-              <div id="square1"></div>
-              <div id="square2"></div>
-              <div id="square3"></div>
-              <div id="square4"></div>
-              <div id="square5"></div>
-            </div>
+            <Loading />
           </div>
         )}
       </div>

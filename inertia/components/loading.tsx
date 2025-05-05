@@ -1,9 +1,11 @@
 export function Loading() {
   return (
-    <div className="flex justify-center items-center h-full">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary">
-        <span className="sr-only">Loading...</span>
-      </div>
+    <div className="loadingspinner">
+      <div id="square1"></div>
+      <div id="square2"></div>
+      <div id="square3"></div>
+      <div id="square4"></div>
+      <div id="square5"></div>
     </div>
   )
 }
