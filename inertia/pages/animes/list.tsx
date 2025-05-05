@@ -45,7 +45,7 @@ export default function AnimesList({ csrf }: PageProps) {
             title={anime.title.english ? anime.title.english : anime.title.romaji}
             year={anime.startDate.year}
             rating={anime.averageScore}
-            image={anime.coverImage.large}
+            image={anime.coverImage.extraLarge}
           />
         ))}
         {loading && (

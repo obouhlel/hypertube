@@ -24,6 +24,9 @@ export class AnimeService {
         }
         coverImage {
           large
+          medium
+          extraLarge
+          color
         }
         description
         genres
