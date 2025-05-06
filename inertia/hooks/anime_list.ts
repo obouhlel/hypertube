@@ -39,7 +39,6 @@ export const useAnimeList = (csrf: string) => {
       ...prev,
       page: data.pageInfo.hasNextPage ? settings.page + 1 : settings.page,
       hasNextPage: data.pageInfo.hasNextPage,
-      total: data.pageInfo.total,
     }))
   }
 
@@ -88,10 +87,8 @@ export const useAnimeList = (csrf: string) => {
       setLoading(true)
       setStopScroll(true)
       settings.search.trim().toLowerCase()
-      const filtered = animes.filter(
-        (anime) =>
-          anime.title.english?.toLowerCase().includes(settings.search!.toLowerCase()) ||
-          anime.title.romaji?.toLowerCase().includes(settings.search!.toLowerCase())
+      const filtered = animes.filter((anime) =>
+        anime.title.english!.toLowerCase().includes(settings.search!.toLowerCase())
       )
       setAnimesFiltered(filtered)
       getAnimesFiltered().then(() => setLoading(false))
