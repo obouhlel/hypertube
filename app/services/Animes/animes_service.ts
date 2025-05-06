@@ -11,7 +11,7 @@ export class AnimeService {
       pageInfo {
         hasNextPage
       }
-      media(type: ANIME, isAdult: false, averageScore_greater: 50) {
+      media(type: ANIME, isAdult: false, averageScore_greater: 80, sort: [SCORE_DESC]) {
         id
         title {
           romaji
@@ -50,7 +50,7 @@ export class AnimeService {
         hasNextPage
         perPage
       }
-      media(type: ANIME, search: $search, genre_in: $genreIn, sort: $sort, isAdult: false, averageScore_greater: 50) {
+      media(type: ANIME, search: $search, genre_in: $genreIn, sort: $sort, isAdult: false) {
         id
         title {
           romaji

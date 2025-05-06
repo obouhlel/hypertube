@@ -1,76 +1,37 @@
+import type { Animes, Anime, GenreAnime, AnimeSort } from '~/types/anime.type'
 import { useEffect, useState } from 'react'
-import { fetchAnimes } from '~/pages/animes/fetch'
-import type { Animes, Anime, AnimeSettings, GenreAnime } from '~/types/anime.type'
-import type { Sort } from '~/types/sort.type'
+import { fetchPagination, fetchSearch } from '~/pages/animes/fetch'
 
 export const useAnimeList = (csrf: string) => {
-  const [stopScroll, setStopScroll] = useState<boolean>(false)
   const [animes, setAnimes] = useState<Anime[]>([])
-  const [animesFiltered, setAnimesFiltered] = useState<Anime[]>([])
   const [loading, setLoading] = useState<boolean>(true)
-  const [settings, setSettings] = useState<AnimeSettings>({
-    page: 1,
-    limit: 20,
-    search: null,
-    genres: null,
-    sort: 'asc' as Sort,
-    sortOrder: ['TITLE_ENGLISH'],
-    hasNextPage: true,
-  })
+  const [paginationPage, setPaginationPage] = useState<number>(1)
+  const [paginationHasNextPage, setPaginationHasNextPage] = useState<boolean>(true)
 
   const getAnimes = async () => {
-    if (!settings.hasNextPage) return
-    const data: Animes | null = await fetchAnimes(
-      csrf,
-      settings.page,
-      settings.limit,
-      settings.search,
-      settings.genres,
-      settings.sort,
-      settings.sortOrder
-    )
-    if (!data) return setTimeout(() => getAnimes(), 1000)
-    setAnimes((prev) => {
-      const animeIds = new Set(prev.map((anime) => anime.id))
-      const newAnimes = data.media.filter((anime) => !animeIds.has(anime.id))
-      return [...prev, ...newAnimes]
-    })
-    setSettings((prev) => ({
-      ...prev,
-      page: data.pageInfo.hasNextPage ? settings.page + 1 : settings.page,
-      hasNextPage: data.pageInfo.hasNextPage,
-    }))
-  }
-
-  const getAnimesFiltered = async () => {
-    const data: Animes | null = await fetchAnimes(
-      csrf,
-      1,
-      5000,
-      settings.search,
-      settings.genres,
-      settings.sort,
-      settings.sortOrder
-    )
+    if (!paginationHasNextPage) return
+    const data: Animes | null = await fetchPagination(csrf, paginationPage, 20)
     if (!data) return
-    setAnimesFiltered((prev) => {
-      const animeIds = new Set(prev.map((anime) => anime.id))
-      const newAnimes = data.media.filter((anime) => !animeIds.has(anime.id))
-      return [...prev, ...newAnimes]
+    setAnimes(() => {
+      const newAnimes = [
+        ...animes,
+        ...data.media.filter((anime) => !animes.some((existing) => existing.id === anime.id)),
+      ]
+      return newAnimes
     })
+    setPaginationHasNextPage(data.pageInfo.hasNextPage)
+    if (paginationHasNextPage) setPaginationPage((prev) => prev + 1)
   }
 
   useEffect(() => {
-    const { page, hasNextPage } = settings
-    if (page === 1) {
+    if (paginationPage === 1) {
       getAnimes().then(() => setLoading(false))
     }
 
     const handleScroll = () => {
       if (
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
-        hasNextPage &&
-        !stopScroll &&
+        paginationHasNextPage &&
         !loading
       ) {
         setLoading(true)
@@ -80,29 +41,67 @@ export const useAnimeList = (csrf: string) => {
 
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [csrf, loading, settings])
+  }, [csrf, loading, paginationPage, paginationHasNextPage])
 
-  useEffect(() => {
-    if (settings.search && settings.search.trim() !== '') {
-      setLoading(true)
-      setStopScroll(true)
-      settings.search.trim().toLowerCase()
-      const filtered = animes.filter((anime) =>
-        anime.title.english!.toLowerCase().includes(settings.search!.toLowerCase())
-      )
-      setAnimesFiltered(filtered)
-      getAnimesFiltered().then(() => setLoading(false))
-    } else {
-      setSettings((prev) => ({ ...prev, search: null }))
-      setStopScroll(false)
-      setAnimesFiltered(animes)
-    }
-  }, [animes, settings.search])
+  // const [animesFiltered, setAnimesFiltered] = useState<Anime[]>([])
+  // const [searchPage, setSearchPage] = useState<number>(1)
+  // const [search, setSearch] = useState<string | null>(null)
+  // const [genres, setGenres] = useState<GenreAnime[] | null>(null)
+  // const [sort, setSort] = useState<AnimeSort[]>([])
+  // const [searchHasNextPage, setSearchHasNextPage] = useState<boolean>(true)
+
+  // const getAnimesSearch = async () => {
+  //   if (!searchHasNextPage) {
+  //     setSearchPage(1)
+  //     return
+  //   }
+  //   const data = await fetchSearch(csrf, searchPage, 20, search, genres, sort)
+  //   if (!data) return
+  //   setAnimesFiltered((prev) => {
+  //     const newAnimes = [
+  //       ...prev,
+  //       ...data.media.filter((anime) => !prev.some((existing) => existing.id === anime.id)),
+  //     ]
+  //     return newAnimes
+  //   })
+  //   setSearchHasNextPage(data.pageInfo.hasNextPage)
+  //   if (searchHasNextPage) setSearchPage((prev) => prev + 1)
+  // }
+
+  // useEffect(() => {
+  //   if (search || genres || sort.length > 0) {
+  //     setSearchPage(1)
+  //     setAnimesFiltered([])
+  //     setSearchHasNextPage(true)
+  //     setLoading(true)
+  //     getAnimesSearch().then(() => setLoading(false))
+  //   } else {
+  //     setAnimesFiltered(animes)
+  //   }
+  // }, [search, genres, sort])
+
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (
+  //       window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
+  //       searchHasNextPage &&
+  //       !loading &&
+  //       (search || genres || sort.length > 0)
+  //     ) {
+  //       setLoading(true)
+  //       getAnimesSearch().then(() => setLoading(false))
+  //     }
+  //   }
+
+  //   window.addEventListener('scroll', handleScroll)
+  //   return () => window.removeEventListener('scroll', handleScroll)
+  // }, [searchHasNextPage, loading, search, genres, sort])
 
   return {
-    animes: animesFiltered,
+    animes: animes,
     loading,
-    setSearch: (search: string | null) => setSettings((prev) => ({ ...prev, search })),
-    setGenres: (genres: GenreAnime[] | null) => setSettings((prev) => ({ ...prev, genres })),
+    // setSearch,
+    // setGenres,
+    // setSort,
   }
 }

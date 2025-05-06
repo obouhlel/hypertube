@@ -9,13 +9,13 @@ interface PageProps {
 }
 
 export default function AnimesList({ csrf }: PageProps) {
-  const { animes, loading, setSearch } = useAnimeList(csrf)
+  const { animes, loading } = useAnimeList(csrf)
 
   return (
     <Layout>
       <Head title="Animes" />
       <div className="w-full flex flex-col col-1 justify-start items-center">
-        <SearchAnimes setSearch={setSearch} />
+        <SearchAnimes csrf={csrf} />
         <div className="w-full max-w-[1200px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
           {animes.map((anime) => (
             <Card

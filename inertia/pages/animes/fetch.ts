@@ -1,26 +1,50 @@
 import axios from 'axios'
-import type { Animes, AnimeSort } from '~/types/anime.type'
-import { Sort } from '~/types/sort.type'
+import type { Animes, AnimeSort, GenreAnime } from '~/types/anime.type'
 
-export const fetchAnimes = async (
+export const fetchPagination = async (
   csrf: string,
   page: number,
-  limit: number,
-  search: string | null,
-  genres: string[] | null,
-  sort: Sort,
-  sortOrder: AnimeSort[]
+  limit: number
 ): Promise<Animes | null> => {
   try {
     const { data } = await axios.post<Animes>(
       '/animes/pagination',
-      { page, limit, search, genres, sort, sortOrder },
+      { page, limit },
       { headers: { 'X-CSRF-TOKEN': csrf } }
     )
 
     return data
   } catch (error) {
-    console.error('Error fetching animes:', error)
+    console.error('Error fetching animes: ', error)
+    return null
+  }
+}
+
+export const fetchSearch = async (
+  csrf: string,
+  page: number,
+  limit: number,
+  search: string | null,
+  genres: GenreAnime[] | null,
+  sort: AnimeSort[] = ['POPULARITY']
+): Promise<Animes | null> => {
+  try {
+    const { data } = await axios.post<Animes>(
+      '/animes/search',
+      {
+        page,
+        limit,
+        search,
+        genres,
+        sort,
+      },
+      {
+        headers: { 'X-CSRF-TOKEN': csrf },
+      }
+    )
+    return data
+  } catch (error) {
+    console.error('Error fetching animes: ', error)
     return null
   }
 }

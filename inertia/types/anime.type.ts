@@ -1,5 +1,3 @@
-import type { Sort } from './sort.type'
-
 export interface Anime {
   id: number
   title: {
@@ -27,11 +25,7 @@ export interface Anime {
 }
 
 export interface PageInfo {
-  total: number
-  currentPage: number
-  lastPage: number
   hasNextPage: boolean
-  perPage: number
 }
 
 export interface Animes {
@@ -42,26 +36,39 @@ export interface Animes {
 export type AnimeSettings = {
   page: number
   limit: number
-  search: string | null
-  genres: GenreAnime[] | null
-  sort: Sort
-  sortOrder: AnimeSort[]
   hasNextPage: boolean
 }
 
 export type AnimeSort =
   | 'TITLE_ROMAJI'
+  | 'TITLE_ROMAJI_DESC'
   | 'TITLE_ENGLISH'
+  | 'TITLE_ENGLISH_DESC'
   | 'TITLE_NATIVE'
+  | 'TITLE_NATIVE_DESC'
+  | 'TYPE'
+  | 'TYPE_DESC'
   | 'FORMAT'
+  | 'FORMAT_DESC'
   | 'START_DATE'
+  | 'START_DATE_DESC'
   | 'END_DATE'
+  | 'END_DATE_DESC'
   | 'SCORE'
+  | 'SCORE_DESC'
   | 'POPULARITY'
+  | 'POPULARITY_DESC'
   | 'TRENDING'
+  | 'TRENDING_DESC'
   | 'EPISODES'
+  | 'EPISODES_DESC'
   | 'DURATION'
+  | 'DURATION_DESC'
   | 'STATUS'
+  | 'STATUS_DESC'
+  | 'UPDATED_AT'
+  | 'UPDATED_AT_DESC'
+  | 'SEARCH_MATCH'
 
 export type GenreAnime =
   | 'Action'
