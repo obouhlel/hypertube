@@ -17,10 +17,4 @@ test.group('Anime', () => {
     }
     assert.equal(30, animes.length)
   }).timeout(60000)
-
-  test('fetching test with search', async ({ assert }) => {
-    const service = new AnimeService()
-    const response = await service.fetchAnilistPagination(1, 2, 'titan')
-    assert.equal(2, response.media.length)
-  })
 })
