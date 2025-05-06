@@ -43,7 +43,7 @@ export type AnimeSettings = {
   page: number
   limit: number
   search: string | null
-  genres: string[] | null
+  genres: GenreAnime[] | null
   sort: Sort
   sortOrder: AnimeSort[]
   hasNextPage: boolean
@@ -62,3 +62,43 @@ export type AnimeSort =
   | 'EPISODES'
   | 'DURATION'
   | 'STATUS'
+
+export type GenreAnime =
+  | 'Action'
+  | 'Adventure'
+  | 'Comedy'
+  | 'Drama'
+  | 'Fantasy'
+  | 'Horror'
+  | 'Mystery'
+  | 'Romance'
+  | 'Sci-Fi'
+  | 'Slice of Life'
+  | 'Supernatural'
+  | 'Thriller'
+  | 'Seinen'
+  | 'Shounen'
+  | 'Shoujo'
+  | 'Josei'
+  | 'Mecha'
+  | 'Isekai'
+  | 'Sports'
+  | 'Music'
+  | 'Historical'
+  | 'Psychological'
+  | 'Ecchi'
+  | 'Harem'
+  | 'Parody'
+  | 'Kids'
+  | 'Game'
+  | 'Military'
+  | 'Space'
+  | 'Demons'
+  | 'Magic'
+  | 'Vampire'
+  | 'Martial Arts'
+  | 'Police'
+  | 'Samurai'
+  | 'Post-Apocalyptic'
+  | 'Cyberpunk'
+  | 'School'

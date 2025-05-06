@@ -2,7 +2,7 @@ import Layout from '~/layouts/layout'
 import { Head } from '@inertiajs/react'
 import { Card, Loading } from '~/components'
 import { useAnimeList } from '~/hooks/anime_list'
-import { Search } from '~/components/search'
+import { SearchAnimes } from '~/components/search-animes'
 
 interface PageProps {
   csrf: string
@@ -15,7 +15,7 @@ export default function AnimesList({ csrf }: PageProps) {
     <Layout>
       <Head title="Animes" />
       <div className="w-full flex flex-col col-1 justify-start items-center">
-        <Search setSearch={setSearch} />
+        <SearchAnimes setSearch={setSearch} />
         <div className="w-full max-w-[1200px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
           {animes.map((anime) => (
             <Card

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchAnimes } from '~/pages/animes/fetch'
-import type { Animes, Anime, AnimeSettings } from '~/types/anime.type'
+import type { Animes, Anime, AnimeSettings, GenreAnime } from '~/types/anime.type'
 import type { Sort } from '~/types/sort.type'
 
 export const useAnimeList = (csrf: string) => {
@@ -103,5 +103,6 @@ export const useAnimeList = (csrf: string) => {
     animes: animesFiltered,
     loading,
     setSearch: (search: string | null) => setSettings((prev) => ({ ...prev, search })),
+    setGenres: (genres: GenreAnime[] | null) => setSettings((prev) => ({ ...prev, genres })),
   }
 }
