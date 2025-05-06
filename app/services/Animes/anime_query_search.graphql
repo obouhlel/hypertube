@@ -1,4 +1,4 @@
-query ($page: Int, $perPage: Int, $search: String, $sort: [MediaSort]) {
+query ($page: Int, $perPage: Int, $search: String, $genreIn: [String], $sort: [MediaSort]) {
   Page(page: $page, perPage: $perPage) {
     pageInfo {
       total
@@ -7,7 +7,14 @@ query ($page: Int, $perPage: Int, $search: String, $sort: [MediaSort]) {
       hasNextPage
       perPage
     }
-    media(type: ANIME, search: $search, sort: $sort, isAdult: false, averageScore_greater: 70) {
+    media(
+      type: ANIME
+      search: $search
+      genre_in: $genreIn
+      sort: $sort
+      isAdult: false
+      averageScore_greater: 50
+    ) {
       id
       title {
         romaji

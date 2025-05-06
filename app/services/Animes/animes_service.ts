@@ -1,13 +1,47 @@
 import Animes, { Anime, AnimeSort } from './anime.type.js'
 import axios from 'axios'
 import PQueue from 'p-queue'
-import { Sort } from '../../types/sort.type.js'
 
 export class AnimeService {
   private anilistURL: string = 'https://graphql.anilist.co'
   // private nyaaURL: string = 'https://nyaaapi.onrender.com/api'
-  private query: string = `
-  query ($page: Int, $perPage: Int, $search: String, $sort: [MediaSort]) {
+  private queryPagination: string = `
+  query ($page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        hasNextPage
+      }
+      media(type: ANIME, isAdult: false, averageScore_greater: 50) {
+        id
+        title {
+          romaji
+          english
+          native
+          userPreferred
+        }
+        coverImage {
+          large
+          medium
+          extraLarge
+          color
+        }
+        description
+        genres
+        episodes
+        startDate {
+          year
+        }
+        endDate {
+          year
+        }
+        averageScore
+      }
+    }
+  }
+  `
+
+  private querySearch: string = `
+  query ($page: Int, $perPage: Int, $search: String, $genreIn: [String], $sort: [MediaSort]) {
     Page(page: $page, perPage: $perPage) {
       pageInfo {
         total
@@ -16,7 +50,7 @@ export class AnimeService {
         hasNextPage
         perPage
       }
-      media(type: ANIME, search: $search, sort: $sort, isAdult: false, averageScore_greater: 40) {
+      media(type: ANIME, search: $search, genre_in: $genreIn, sort: $sort, isAdult: false, averageScore_greater: 50) {
         id
         title {
           romaji
@@ -55,37 +89,15 @@ export class AnimeService {
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
 
-  async fetchAnimeInfo(
-    page: number = 1,
-    limit: number = 20,
-    search: string | null = null,
-    genres: string[] | null = null,
-    sort: Sort = 'asc',
-    sortOrder: AnimeSort[] = ['TITLE_ENGLISH']
-  ): Promise<Animes> {
-    return this.queue.add(
-      this._fetchAnimeInfo.bind(this, page, limit, search, genres, sort, sortOrder)
-    ) as Promise<Animes>
+  async fetchAnilistPagination(page: number = 1, limit: number = 20): Promise<Animes> {
+    return this.queue.add(this._fetchAnilistPagination.bind(this, page, limit)) as Promise<Animes>
   }
 
-  private async _fetchAnimeInfo(
-    page: number = 1,
-    limit: number = 20,
-    search: string | null = null,
-    genres: string[] | null = null,
-    sort: Sort = 'asc',
-    sortOrder: AnimeSort[] = ['TITLE_ENGLISH']
-  ): Promise<Animes> {
+  private async _fetchAnilistPagination(page: number = 1, limit: number = 20): Promise<Animes> {
     try {
-      if (sort === 'desc') {
-        sortOrder[0] = (sortOrder[0] + '_' + sort.toUpperCase()) as AnimeSort
-      }
       const variables = {
         page,
         perPage: limit,
-        search,
-        genre_in: genres,
-        sort: sortOrder,
       }
 
       await this.delay(1500)
@@ -93,7 +105,7 @@ export class AnimeService {
         data: { Page: Animes }
         errors?: Array<{ message: string }>
       }>(this.anilistURL, {
-        query: this.query,
+        query: this.queryPagination,
         variables,
       })
 
@@ -113,7 +125,64 @@ export class AnimeService {
       if (error.response.status === 429) {
         console.warn('Too Many Requests: Retrying in 60 seconds...')
         await this.delay(60000)
-        return this._fetchAnimeInfo(page, limit, search, genres, sort, sortOrder)
+        return this._fetchAnilistPagination(page, limit)
+      }
+      console.error('Error fetching anime info:', error.message)
+      throw new Error('Failed to fetch anime information from Anilist')
+    }
+  }
+
+  async fetchAnilistSearch(
+    page: number = 1,
+    limit: number = 20,
+    search: string | null = null,
+    genres: string[] | null = null,
+    sort: AnimeSort[] = ['POPULARITY']
+  ): Promise<Animes> {
+    return this.queue.add(
+      this._fetchAnilistSearch.bind(this, page, limit, search, genres, sort)
+    ) as Promise<Animes>
+  }
+
+  private async _fetchAnilistSearch(
+    page: number = 1,
+    limit: number = 20,
+    search: string | null = null,
+    genres: string[] | null = null,
+    sort: AnimeSort[] = ['POPULARITY']
+  ): Promise<Animes> {
+    try {
+      const variables = {
+        page: page,
+        perPage: limit,
+        search: search,
+        genre_in: genres,
+        sort: sort,
+      }
+
+      await this.delay(1500)
+      const { data, status } = await axios.post(this.anilistURL, {
+        variables: variables,
+        query: this.querySearch,
+      })
+
+      if (data.data && data.data.Page) {
+        const animes = data.data.Page
+        animes.media.map((anime: Anime) => {
+          anime.averageScore = anime.averageScore / 10
+        })
+        return animes
+      } else if (status !== 200 || data.errors) {
+        console.error('GraphQL errors:', data.errors)
+        throw new Error('Failed to fetch animes: GraphQL errors')
+      } else {
+        throw new Error('Failed to fetch animes: Invalid response structure')
+      }
+    } catch (error) {
+      if (error.response.status === 429) {
+        console.warn('Too Many Requests: Retrying in 60 seconds...')
+        await this.delay(60000)
+        return this._fetchAnilistPagination(page, limit)
       }
       console.error('Error fetching anime info:', error.message)
       throw new Error('Failed to fetch anime information from Anilist')

@@ -1,0 +1,32 @@
+query ($page: Int, $perPage: Int) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      hasNextPage
+    }
+    media(type: ANIME, isAdult: false, averageScore_greater: 50) {
+      id
+      title {
+        romaji
+        english
+        native
+        userPreferred
+      }
+      coverImage {
+        large
+        medium
+        extraLarge
+        color
+      }
+      description
+      genres
+      episodes
+      startDate {
+        year
+      }
+      endDate {
+        year
+      }
+      averageScore
+    }
+  }
+}

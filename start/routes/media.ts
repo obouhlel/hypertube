@@ -14,7 +14,8 @@ const AnimesController = () => import('#controllers/animes_controller')
 router
   .group(() => {
     router.get('list', [AnimesController, 'show'])
-    router.post('pagination', [AnimesController, 'fetchPagination'])
+    router.post('pagination', [AnimesController, 'pagination'])
+    router.post('search', [AnimesController, 'search'])
   })
   .prefix('animes')
   .use(middleware.auth())

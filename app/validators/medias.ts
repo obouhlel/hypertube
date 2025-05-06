@@ -13,7 +13,6 @@ export const animesValidator = vine.compile(
     limit: vine.number().positive(),
     search: vine.string().nullable(),
     genres: vine.array(vine.string()).nullable(),
-    sort: vine.string().nullable(),
-    sortOrder: vine.array(vine.string()),
+    sort: vine.array(vine.string()),
   })
 )
