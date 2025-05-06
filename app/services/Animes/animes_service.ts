@@ -82,11 +82,7 @@ export class AnimeService {
   private queue: PQueue
 
   constructor() {
-    this.queue = new PQueue({ concurrency: 1, interval: 1500 })
-  }
-
-  private delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms))
+    this.queue = new PQueue({ concurrency: 2, interval: 3000, intervalCap: 4 })
   }
 
   async fetchAnilistPagination(page: number = 1, limit: number = 20): Promise<Animes> {
@@ -100,7 +96,6 @@ export class AnimeService {
         perPage: limit,
       }
 
-      await this.delay(1500)
       const { data, status } = await axios.post<{
         data: { Page: Animes }
         errors?: Array<{ message: string }>
@@ -123,8 +118,6 @@ export class AnimeService {
       }
     } catch (error) {
       if (error.response.status === 429) {
-        console.warn('Too Many Requests: Retrying in 60 seconds...')
-        await this.delay(60000)
         return this._fetchAnilistPagination(page, limit)
       }
       console.error('Error fetching anime info:', error.message)
@@ -160,7 +153,6 @@ export class AnimeService {
         sort: sort,
       }
 
-      await this.delay(1500)
       const { data, status } = await axios.post(this.anilistURL, {
         variables: variables,
         query: this.querySearch,
@@ -180,8 +172,6 @@ export class AnimeService {
       }
     } catch (error) {
       if (error.response.status === 429) {
-        console.warn('Too Many Requests: Retrying in 60 seconds...')
-        await this.delay(60000)
         return this._fetchAnilistPagination(page, limit)
       }
       console.error('Error fetching anime info:', error.message)
