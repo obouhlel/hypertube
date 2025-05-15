@@ -45,7 +45,13 @@ export default await Env.create(new URL('../', import.meta.url), {
   */
   SMTP_HOST: Env.schema.string(),
   SMTP_PORT: Env.schema.string(),
-
+  /*
+  |----------------------------------------------------------
+  | Variables for api anime service
+  |----------------------------------------------------------
+  */
+  API_ANIME_USERNAME: Env.schema.string(),
+  API_ANIME_PASSWORD: Env.schema.string(),
   /*
   |----------------------------------------------------------
   | Variables for configuring ally package

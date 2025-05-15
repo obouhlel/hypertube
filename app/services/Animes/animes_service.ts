@@ -1,181 +1,86 @@
-import Animes, { Anime, AnimeSort } from './anime.type.js'
 import axios from 'axios'
-import PQueue from 'p-queue'
+import env from '#start/env'
+import Anime from './anime.type.js'
 
 export class AnimeService {
-  private anilistURL: string = 'https://graphql.anilist.co'
-  // private nyaaURL: string = 'https://nyaaapi.onrender.com/api'
-  private queryPagination: string = `
-  query ($page: Int, $perPage: Int) {
-    Page(page: $page, perPage: $perPage) {
-      pageInfo {
-        hasNextPage
-      }
-      media(type: ANIME, isAdult: false, averageScore_greater: 80, sort: [SCORE_DESC]) {
-        id
-        title {
-          romaji
-          english
-          native
-          userPreferred
-        }
-        coverImage {
-          large
-          medium
-          extraLarge
-          color
-        }
-        description
-        genres
-        episodes
-        startDate {
-          year
-        }
-        endDate {
-          year
-        }
-        averageScore
-      }
-    }
-  }
-  `
+  private url = 'https://api.animetorrent.oustopie.xyz'
+  private token: string | null = null
 
-  private querySearch: string = `
-  query ($page: Int, $perPage: Int, $search: String, $genreIn: [String], $sort: [MediaSort]) {
-    Page(page: $page, perPage: $perPage) {
-      pageInfo {
-        total
-        currentPage
-        lastPage
-        hasNextPage
-        perPage
-      }
-      media(type: ANIME, search: $search, genre_in: $genreIn, sort: $sort, isAdult: false) {
-        id
-        title {
-          romaji
-          english
-          native
-          userPreferred
-        }
-        coverImage {
-          large
-          medium
-          extraLarge
-          color
-        }
-        description
-        genres
-        episodes
-        startDate {
-          year
-        }
-        endDate {
-          year
-        }
-        averageScore
-      }
-    }
-  }
-  `
+  constructor() {}
 
-  private queue: PQueue
-
-  constructor() {
-    this.queue = new PQueue({ concurrency: 2, interval: 3000, intervalCap: 4 })
-  }
-
-  async fetchAnilistPagination(page: number = 1, limit: number = 20): Promise<Animes> {
-    return this.queue.add(this._fetchAnilistPagination.bind(this, page, limit)) as Promise<Animes>
-  }
-
-  private async _fetchAnilistPagination(page: number = 1, limit: number = 20): Promise<Animes> {
+  private async _auth(): Promise<boolean> {
+    if (this.token) return true
     try {
-      const variables = {
-        page,
-        perPage: limit,
-      }
-
-      const { data, status } = await axios.post<{
-        data: { Page: Animes }
-        errors?: Array<{ message: string }>
-      }>(this.anilistURL, {
-        query: this.queryPagination,
-        variables,
+      const { data } = await axios.post<{ token: string }>(this.url + '/auth', {
+        username: env.get('API_ANIME_USERNAME'),
+        password: env.get('API_ANIME_PASSWORD'),
       })
-
-      if (data.data && data.data.Page) {
-        const animes = data.data.Page
-        animes.media.map((anime: Anime) => {
-          anime.averageScore = anime.averageScore / 10
-        })
-        return animes
-      } else if (status !== 200 || data.errors) {
-        console.error('GraphQL errors:', data.errors)
-        throw new Error('Failed to fetch animes: GraphQL errors')
-      } else {
-        throw new Error('Failed to fetch animes: Invalid response structure')
+      if (data?.token) {
+        this.token = data.token
+        return true
       }
+      return false
     } catch (error) {
-      if (error.response.status === 429) {
-        return this._fetchAnilistPagination(page, limit)
-      }
-      console.error('Error fetching anime info:', error.message)
-      throw new Error('Failed to fetch anime information from Anilist')
+      console.error('Auth failed:', error)
+      return false
     }
   }
 
-  async fetchAnilistSearch(
-    page: number = 1,
-    limit: number = 20,
-    search: string | null = null,
-    genres: string[] | null = null,
-    sort: AnimeSort[] = ['POPULARITY']
-  ): Promise<Animes> {
-    return this.queue.add(
-      this._fetchAnilistSearch.bind(this, page, limit, search, genres, sort)
-    ) as Promise<Animes>
+  public async getAll(): Promise<Anime[]> {
+    try {
+      if (!this.token) await this._auth()
+      const { data } = await axios.get<Anime[]>(this.url + '/animes/all', {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+      if (!data) {
+        throw new Error('Animes not found')
+      }
+      return data
+    } catch (error) {
+      console.error(error)
+      return []
+    }
   }
 
-  private async _fetchAnilistSearch(
-    page: number = 1,
-    limit: number = 20,
-    search: string | null = null,
-    genres: string[] | null = null,
-    sort: AnimeSort[] = ['POPULARITY']
-  ): Promise<Animes> {
+  public async getStream(limit: number = 20, page: number = 1): Promise<Anime[] | null> {
     try {
-      const variables = {
-        page: page,
-        perPage: limit,
-        search: search,
-        genre_in: genres,
-        sort: sort,
-      }
-
-      const { data, status } = await axios.post(this.anilistURL, {
-        variables: variables,
-        query: this.querySearch,
+      if (!this.token) await this._auth()
+      const { data } = await axios.get<Anime[]>(this.url + '/animes/stream', {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+        params: {
+          limit,
+          page,
+        },
       })
-
-      if (data.data && data.data.Page) {
-        const animes = data.data.Page
-        animes.media.map((anime: Anime) => {
-          anime.averageScore = anime.averageScore / 10
-        })
-        return animes
-      } else if (status !== 200 || data.errors) {
-        console.error('GraphQL errors:', data.errors)
-        throw new Error('Failed to fetch animes: GraphQL errors')
-      } else {
-        throw new Error('Failed to fetch animes: Invalid response structure')
+      if (!data) {
+        throw new Error('Anime not found')
       }
+      return data
     } catch (error) {
-      if (error.response.status === 429) {
-        return this._fetchAnilistPagination(page, limit)
+      console.error(error)
+      return null
+    }
+  }
+
+  public async getById(id: number): Promise<Anime | null> {
+    try {
+      if (!this.token) await this._auth()
+      const { data } = await axios.get<Anime>(this.url + '/animes/' + id, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+      if (!data) {
+        throw new Error('Anime not found')
       }
-      console.error('Error fetching anime info:', error.message)
-      throw new Error('Failed to fetch anime information from Anilist')
+      return data
+    } catch (error) {
+      console.error(error)
+      return null
     }
   }
 }
