@@ -8,23 +8,15 @@ export interface Episode {
 }
 
 export default interface Anime {
+  id: number
   mal_id: number
   titles: Array<{
     type: string
     title: string
   }>
-  images: {
-    jpg: {
-      image_url: string
-      small_image_url: string
-      large_image_url: string
-    }
-    webp: {
-      image_url: string
-      small_image_url: string
-      large_image_url: string
-    }
-  }
+  image_url: string
+  small_image_url: string
+  large_image_url: string
   genres: Array<{
     mal_id: number
     type: string

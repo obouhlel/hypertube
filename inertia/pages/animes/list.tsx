@@ -20,10 +20,10 @@ export default function AnimesList({ csrf }: PageProps) {
           {animes.map((anime) => (
             <Card
               key={anime.id}
-              title={anime.title.english ? anime.title.english : anime.title.romaji}
-              year={anime.startDate.year}
-              rating={anime.averageScore}
-              image={anime.coverImage.extraLarge}
+              title={anime.titles.find((t) => t.type === 'Default')!.title!}
+              year={anime.year || 2025}
+              rating={anime.score || 5}
+              image={anime.large_image_url}
             />
           ))}
           {!loading && animes.length === 0 && (

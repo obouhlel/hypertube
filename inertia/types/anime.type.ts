@@ -1,111 +1,33 @@
-export interface Anime {
+export interface Episode {
+  title: string
+  seeders: number
+  leechers: number
+  size: string
+  torrent: string
+  magnet: string
+}
+
+export default interface Anime {
   id: number
-  title: {
-    romaji: string
-    english?: string
-    native?: string
-    userPreferred?: string
-  }
-  coverImage: {
-    large: string
-    medium: string
-    extraLarge: string
-    color: string
-  }
+  mal_id: number
+  titles: Array<{
+    type: string
+    title: string
+  }>
+  genres: Array<{
+    mal_id: number
+    type: string
+    name: string
+    url: string
+  }>
+  image_url: string
+  small_image_url: string
+  large_image_url: string
   description: string
-  genres: string[]
-  episodes: number | null
-  startDate: {
-    year: number
-  }
-  endDate: {
-    year: number
-  }
-  averageScore: number
+  trailer: string
+  nbEpisodes: number
+  episodes: Episode[]
+  airing: boolean
+  score: number
+  year: number
 }
-
-export interface PageInfo {
-  hasNextPage: boolean
-}
-
-export interface Animes {
-  pageInfo: PageInfo
-  media: Anime[]
-}
-
-export type AnimeSettings = {
-  page: number
-  limit: number
-  hasNextPage: boolean
-}
-
-export type AnimeSort =
-  | 'TITLE_ROMAJI'
-  | 'TITLE_ROMAJI_DESC'
-  | 'TITLE_ENGLISH'
-  | 'TITLE_ENGLISH_DESC'
-  | 'TITLE_NATIVE'
-  | 'TITLE_NATIVE_DESC'
-  | 'TYPE'
-  | 'TYPE_DESC'
-  | 'FORMAT'
-  | 'FORMAT_DESC'
-  | 'START_DATE'
-  | 'START_DATE_DESC'
-  | 'END_DATE'
-  | 'END_DATE_DESC'
-  | 'SCORE'
-  | 'SCORE_DESC'
-  | 'POPULARITY'
-  | 'POPULARITY_DESC'
-  | 'TRENDING'
-  | 'TRENDING_DESC'
-  | 'EPISODES'
-  | 'EPISODES_DESC'
-  | 'DURATION'
-  | 'DURATION_DESC'
-  | 'STATUS'
-  | 'STATUS_DESC'
-  | 'UPDATED_AT'
-  | 'UPDATED_AT_DESC'
-  | 'SEARCH_MATCH'
-
-export type GenreAnime =
-  | 'Action'
-  | 'Adventure'
-  | 'Comedy'
-  | 'Drama'
-  | 'Fantasy'
-  | 'Horror'
-  | 'Mystery'
-  | 'Romance'
-  | 'Sci-Fi'
-  | 'Slice of Life'
-  | 'Supernatural'
-  | 'Thriller'
-  | 'Seinen'
-  | 'Shounen'
-  | 'Shoujo'
-  | 'Josei'
-  | 'Mecha'
-  | 'Isekai'
-  | 'Sports'
-  | 'Music'
-  | 'Historical'
-  | 'Psychological'
-  | 'Ecchi'
-  | 'Harem'
-  | 'Parody'
-  | 'Kids'
-  | 'Game'
-  | 'Military'
-  | 'Space'
-  | 'Demons'
-  | 'Magic'
-  | 'Vampire'
-  | 'Martial Arts'
-  | 'Police'
-  | 'Samurai'
-  | 'Post-Apocalyptic'
-  | 'Cyberpunk'
-  | 'School'

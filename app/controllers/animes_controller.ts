@@ -1,7 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { AnimeService } from '#services/Animes/animes_service'
-import { animesValidator, mediasValidator } from '#validators/medias'
-import { AnimeSort } from '#services/Animes/anime.type'
+import { mediasValidator } from '#validators/medias'
 
 export default class AnimesController {
   async show({ inertia }: HttpContext) {
@@ -13,25 +12,7 @@ export default class AnimesController {
     const service = new AnimeService()
 
     try {
-      const animes = await service.fetchAnilistPagination(page, limit)
-      return response.json(animes)
-    } catch {
-      return response.status(500).json({ error: 'Error fetching animes from the service Anilist' })
-    }
-  }
-
-  async search({ request, response }: HttpContext) {
-    const { page, limit, search, genres, sort } = await request.validateUsing(animesValidator)
-    const service = new AnimeService()
-
-    try {
-      const animes = await service.fetchAnilistSearch(
-        page,
-        limit,
-        search,
-        genres,
-        sort as AnimeSort[]
-      )
+      const animes = await service.getStream(limit, page)
       return response.json(animes)
     } catch {
       return response.status(500).json({ error: 'Error fetching animes from the service Anilist' })
