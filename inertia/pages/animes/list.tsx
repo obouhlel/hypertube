@@ -3,6 +3,7 @@ import { Head } from '@inertiajs/react'
 import { Card, Loading } from '~/components'
 import { useAnimeList } from '~/hooks/anime_list'
 import { SearchAnimes } from '~/components/search-animes'
+import Anime from '~/types/anime.type'
 
 interface PageProps {
   csrf: string
@@ -10,6 +11,15 @@ interface PageProps {
 
 export default function AnimesList({ csrf }: PageProps) {
   const { animes, loading } = useAnimeList(csrf)
+
+  // Fonction utilitaire pour obtenir le titre
+  const getAnimeTitle = (anime: Anime) => {
+    return (
+      anime.titles.find((t: any) => t.type === 'English')?.title ||
+      anime.titles.find((t: any) => t.type === 'Default')!.title ||
+      'No title'
+    )
+  }
 
   return (
     <Layout>
@@ -20,7 +30,7 @@ export default function AnimesList({ csrf }: PageProps) {
           {animes.map((anime) => (
             <Card
               key={anime.id}
-              title={anime.titles.find((t) => t.type === 'Default')!.title!}
+              title={getAnimeTitle(anime)}
               year={anime.year || 2025}
               rating={anime.score || 5}
               image={anime.large_image_url}
