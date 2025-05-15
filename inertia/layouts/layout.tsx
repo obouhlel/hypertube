@@ -26,7 +26,14 @@ export default function Layout({ children }: LayoutProps) {
   }
 
   return (
-    <div className='w-screen min-h-screen flex flex-col'>
+    <>
+      <div className="w-screen min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 pt-18">
+          {children}
+        </main>
+        <Footer />
+      </div>
       {emailConfirmation && (
         <div className="fixed bottom-4 right-4 z-50 bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-5 rounded-lg shadow-lg">
           <div className="flex items-center justify-center">
@@ -41,9 +48,6 @@ export default function Layout({ children }: LayoutProps) {
           </button>
         </div>
       )}
-      <Header />
-      <main className="flex-1">{children}</main>
-      <Footer />
-    </div>
+    </>
   )
 }
