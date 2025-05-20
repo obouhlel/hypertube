@@ -1,6 +1,4 @@
-import { GenreAnime } from '~/types/anime.type'
-
-export const genresAnime: GenreAnime[] = [
+export const genres: string[] = [
   'Action',
   'Adventure',
   'Comedy',
@@ -13,30 +11,4 @@ export const genresAnime: GenreAnime[] = [
   'Slice of Life',
   'Supernatural',
   'Thriller',
-  'Seinen',
-  'Shounen',
-  'Shoujo',
-  'Josei',
-  'Mecha',
-  'Isekai',
-  'Sports',
-  'Music',
-  'Historical',
-  'Psychological',
-  'Ecchi',
-  'Harem',
-  'Parody',
-  'Kids',
-  'Game',
-  'Military',
-  'Space',
-  'Demons',
-  'Magic',
-  'Vampire',
-  'Martial Arts',
-  'Police',
-  'Samurai',
-  'Post-Apocalyptic',
-  'Cyberpunk',
-  'School',
 ]
